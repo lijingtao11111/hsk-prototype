@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - 练习记录</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css">
+  <style>
+    .history-header {
+      background-color: #4f46e5;
+      color: white;
+      padding: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .history-pattern {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+    
+    .history-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .filter-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+      padding-bottom: 1px;
+    }
+    
+    .filter-tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      white-space: nowrap;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+    }
+    
+    .filter-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    
+    .history-card {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .history-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background-color: white;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .history-card-body {
+      padding: 1.5rem;
+      background-color: white;
+    }
+    
+    .history-card-footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background-color: #f9fafb;
+      border-top: 1px solid var(--border);
+    }
+    
+    .history-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+      color: var(--primary);
+    }
+    
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    .stat-icon {
+      font-size: 1.5rem;
+      width: 3rem;
+      height: 3rem;
+      background-color: rgba(79, 70, 229, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .chart-container {
+      height: 250px;
+      position: relative;
+      margin-bottom: 2rem;
+    }
+    
+    .subject-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      background-color: #e5e7eb;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-right: 0.5rem;
+    }
+    
+    .subject-tag.hsk {
+      background-color: #e1e7ff;
+      color: #4f46e5;
+    }
+    
+    .subject-tag.cet {
+      background-color: #dcfce7;
+      color: #10b981;
+    }
+    
+    .subject-tag.math {
+      background-color: #fef3c7;
+      color: #f59e0b;
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="home.html" class="navbar-brand">智能考试系统</a>
+      
+      <ul class="navbar-menu">
+        <li class="navbar-item"><a href="home.html" class="navbar-link">首页</a></li>
+        <li class="navbar-item"><a href="subjects.html" class="navbar-link">学科选择</a></li>
+        <li class="navbar-item"><a href="wrong-questions.html" class="navbar-link">错题本</a></li>
+        <li class="navbar-item"><a href="profile.html" class="navbar-link">个人中心</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- 练习记录头部 -->
+  <section class="history-header">
+    <div class="history-pattern"></div>
+    
+    <div class="container history-content">
+      <h1 style="font-size: 1.75rem; font-weight: bold; margin-bottom: 0.5rem;">练习记录</h1>
+      <p style="opacity: 0.9;">查看你的练习历史和学习统计</p>
+      
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem;">
+        <div style="background-color: rgba(255, 255, 255, 0.1); padding: 0.75rem 1.5rem; border-radius: 0.5rem; backdrop-filter: blur(4px);">
+          <div style="font-size: 0.875rem; opacity: 0.8;">总练习次数</div>
+          <div style="font-size: 1.5rem; font-weight: bold;">45</div>
+        </div>
+        
+        <div style="background-color: rgba(255, 255, 255, 0.1); padding: 0.75rem 1.5rem; border-radius: 0.5rem; backdrop-filter: blur(4px);">
+          <div style="font-size: 0.875rem; opacity: 0.8;">总练习时长</div>
+          <div style="font-size: 1.5rem; font-weight: bold;">12.5小时</div>
+        </div>
+        
+        <div style="background-color: rgba(255, 255, 255, 0.1); padding: 0.75rem 1.5rem; border-radius: 0.5rem; backdrop-filter: blur(4px);">
+          <div style="font-size: 0.875rem; opacity: 0.8;">平均正确率</div>
+          <div style="font-size: 1.5rem; font-weight: bold;">78%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <div class="container" style="padding: 2rem 0 5rem 0;">
+    <!-- 练习统计 -->
+    <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem;">练习统计</h2>
+    
+    <div class="history-stats">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="ri-calendar-check-line"></i>
+        </div>
+        <div class="stat-label">连续练习</div>
+        <div class="stat-value">5天</div>
+        <div style="font-size: 0.875rem; color: var(--success);">+2天</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="ri-time-line"></i>
+        </div>
+        <div class="stat-label">本周练习时长</div>
+        <div class="stat-value">4.5小时</div>
+        <div style="font-size: 0.875rem; color: var(--success);">+20%</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="ri-question-line"></i>
+        </div>
+        <div class="stat-label">本周题量</div>
+        <div class="stat-value">218题</div>
+        <div style="font-size: 0.875rem; color: var(--success);">+15%</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="ri-percent-line"></i>
+        </div>
+        <div class="stat-label">本周正确率</div>
+        <div class="stat-value">82%</div>
+        <div style="font-size: 0.875rem; color: var(--success);">+4%</div>
+      </div>
+    </div>
+    
+    <!-- 练习趋势图 -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">练习趋势</h3>
+      <div class="chart-container">
+        <!-- 这里实际项目中会使用图表库，这里用占位符 -->
+        <div style="width: 100%; height: 100%; background-color: #f3f4f6; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+          图表区域 - 显示每日练习时长和正确率趋势
+        </div>
+      </div>
+    </div>
+    
+    <!-- 练习记录过滤器 -->
+    <div class="filter-tabs">
+      <div class="filter-tab active">所有记录</div>
+      <div class="filter-tab">真题练习</div>
+      <div class="filter-tab">专项练习</div>
+      <div class="filter-tab">模拟考试</div>
+    </div>
+    
+    <!-- 练习记录列表 -->
+    <div class="history-list">
+      <!-- 记录项1 -->
+      <div class="history-card">
+        <div class="history-card-header">
+          <div>
+            <h3 style="font-weight: 600; font-size: 1.125rem;">HSK四级 - 2023年6月真题</h3>
+            <div style="color: var(--text-secondary); font-size: 0.875rem;">完成于 2023-06-15 10:30</div>
+          </div>
+          <div class="subject-tag hsk">HSK四级</div>
+        </div>
+        
+        <div class="history-card-body">
+          <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">得分</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">85/100</div>
+            </div>
+            
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">用时</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">45分钟</div>
+            </div>
+            
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">题量</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">50题</div>
+            </div>
+            
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">正确率</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">85%</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="history-card-footer">
+          <a href="practice-result.html?id=202306150001" class="btn btn-outline">查看详情</a>
+          <a href="practice.html?type=repeat&id=202306150001" class="btn btn-primary">重新练习</a>
+        </div>
+      </div>
+      
+      <!-- 记录项2 -->
+      <div class="history-card">
+        <div class="history-card-header">
+          <div>
+            <h3 style="font-weight: 600; font-size: 1.125rem;">大学英语四级 - 词汇专项训练</h3>
+            <div style="color: var(--text-secondary); font-size: 0.875rem;">完成于 2023-06-14 15:45</div>
+          </div>
+          <div class="subject-tag cet">CET-4</div>
+        </div>
+        
+        <div class="history-card-body">
+          <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">得分</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">72/100</div>
+            </div>
+            
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">用时</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">30分钟</div>
+            </div>
+            
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">题量</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">40题</div>
+            </div>
+            
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">正确率</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">72%</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="history-card-footer">
+          <a href="practice-result.html?id=202306140002" class="btn btn-outline">查看详情</a>
+          <a href="practice.html?type=repeat&id=202306140002" class="btn btn-primary">重新练习</a>
+        </div>
+      </div>
+      
+      <!-- 记录项3 -->
+      <div class="history-card">
+        <div class="history-card-header">
+          <div>
+            <h3 style="font-weight: 600; font-size: 1.125rem;">高等数学 - 微积分基础</h3>
+            <div style="color: var(--text-secondary); font-size: 0.875rem;">完成于 2023-06-12 20:15</div>
+          </div>
+          <div class="subject-tag math">数学</div>
+        </div>
+        
+        <div class="history-card-body">
+          <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">得分</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">68/100</div>
+            </div>
+            
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">用时</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">60分钟</div>
+            </div>
+            
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">题量</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">25题</div>
+            </div>
+            
+            <div>
+              <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.25rem;">正确率</div>
+              <div style="font-size: 1.25rem; font-weight: 600;">68%</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="history-card-footer">
+          <a href="practice-result.html?id=202306120003" class="btn btn-outline">查看详情</a>
+          <a href="practice.html?type=repeat&id=202306120003" class="btn btn-primary">重新练习</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 分页按钮 -->
+    <div style="display: flex; justify-content: center; margin-top: 2rem;">
+      <div class="filter-button">上一页</div>
+      <div class="filter-button active">1</div>
+      <div class="filter-button">2</div>
+      <div class="filter-button">3</div>
+      <div class="filter-button">下一页</div>
+    </div>
+  </div>
+  
+  <!-- 移动端底部导航 -->
+  <div class="mobile-navbar">
+    <div class="mobile-navbar-menu">
+      <div class="mobile-navbar-item">
+        <a href="home.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-home-5-line"></i>
+          <span>首页</span>
+        </a>
+      </div>
+      <div class="mobile-navbar-item">
+        <a href="subjects.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-book-open-line"></i>
+          <span>学科</span>
+        </a>
+      </div>
+      <div class="mobile-navbar-item">
+        <a href="wrong-questions.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-error-warning-line"></i>
+          <span>错题本</span>
+        </a>
+      </div>
+      <div class="mobile-navbar-item">
+        <a href="profile.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-user-line"></i>
+          <span>我的</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <script src="js/app.js"></script>
+</body>
+</html> 

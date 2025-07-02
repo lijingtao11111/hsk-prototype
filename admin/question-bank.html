@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - 题库管理</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #eef2ff;
+      --primary-dark: #4338ca;
+      --secondary: #6b7280;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --background: #f9fafb;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --border-radius: 0.5rem;
+      --transition: all 0.2s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--background); color: var(--text-primary); display: flex; min-height: 100vh; }
+    .sidebar { width: 250px; background-color: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 10; }
+    .sidebar-header { padding: 1.5rem; display: flex; align-items: center; border-bottom: 1px solid var(--border); }
+    .sidebar-logo { width: 2.5rem; height: 2.5rem; border-radius: 8px; background-color: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.25rem; margin-right: 0.75rem; }
+    .sidebar-title { font-weight: 600; font-size: 1.125rem; }
+    .sidebar-menu { flex: 1; padding: 1.5rem 0; overflow-y: auto; }
+    .sidebar-section { margin-bottom: 1.5rem; }
+    .sidebar-section-title { padding: 0 1.5rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.75rem; }
+    .sidebar-link { display: flex; align-items: center; padding: 0.75rem 1.5rem; color: var(--text-primary); text-decoration: none; font-weight: 500; transition: all 0.2s; }
+    .sidebar-link:hover { background-color: var(--primary-light); }
+    .sidebar-link.active { background-color: var(--primary-light); color: var(--primary); border-left: 3px solid var(--primary); }
+    .sidebar-icon { margin-right: 0.75rem; font-size: 1.25rem; }
+    .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; }
+    .sidebar-footer-avatar { width: 2.25rem; height: 2.25rem; border-radius: 8px; background-color: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 600; margin-right: 0.75rem; }
+    .main-content { flex: 1; margin-left: 250px; padding: 1.5rem; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+    .page-title { font-size: 1.5rem; font-weight: 600; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: var(--transition); border: none; }
+    .btn-primary { background-color: var(--primary); color: white; }
+    .btn-primary:hover { background-color: var(--primary-dark); }
+    .btn-outline { background-color: white; border: 1px solid var(--border); color: var(--text-secondary); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.813rem; }
+    .btn-icon { margin-right: 0.375rem; }
+    .card { background-color: white; border-radius: var(--border-radius); box-shadow: var(--card-shadow); border: 1px solid var(--border); overflow: hidden; margin-bottom: 1.5rem; }
+    .card-header { padding: 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background-color: #f9fafb; }
+    .card-title { font-weight: 600; font-size: 1rem; }
+    .card-body { padding: 1.25rem; }
+    .filter-area { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+    .search-box { position: relative; flex: 1; min-width: 200px; }
+    .search-input { width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.5rem; border: 1px solid var(--border); border-radius: 0.375rem; font-size: 0.875rem; outline: none; transition: var(--transition); }
+    .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+    .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1rem; pointer-events: none; }
+    .filter-select { padding: 0.5rem 2rem 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 0.375rem; font-size: 0.875rem; outline: none; appearance: none; background-color: white; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1rem; min-width: 150px; transition: var(--transition); }
+    .filter-select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+    .table-container { overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th, .data-table td { padding: 1rem; text-align: left; }
+    .data-table th { font-weight: 600; color: var(--text-secondary); font-size: 0.875rem; background-color: #f9fafb; border-bottom: 1px solid var(--border); }
+    .data-table td { border-bottom: 1px solid var(--border); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover { background-color: #f9fafb; }
+    .pagination { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; border-top: 1px solid var(--border); background-color: #f9fafb; }
+    .pagination-info { font-size: 0.875rem; color: var(--text-secondary); }
+    .pagination-controls { display: flex; align-items: center; gap: 0.25rem; }
+    .page-btn { width: 2rem; height: 2rem; border-radius: 0.375rem; display: inline-flex; align-items: center; justify-content: center; font-size: 0.875rem; color: var(--text-secondary); background-color: white; border: 1px solid var(--border); cursor: pointer; transition: var(--transition); }
+    .page-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .page-btn.active { background-color: var(--primary); color: white; border-color: var(--primary); }
+    .page-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+    .action-btn { padding: 0.375rem; border-radius: 0.375rem; color: var(--text-secondary); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); background-color: transparent; border: none; }
+    .action-btn:hover { background-color: var(--background); color: var(--primary); }
+    .actions-cell { display: flex; gap: 0.5rem; }
+    @media (max-width: 1200px) { .form-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; } .sidebar.show { transform: translateX(0); } .main-content { margin-left: 0; } .topbar { flex-wrap: wrap; gap: 1rem; } .filter-area { flex-direction: column; } }
+    /* 模态框美化，参考用户管理/学科管理页面 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal {
+      width: 100%;
+      max-width: 500px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      transform: translateY(-20px);
+      transition: transform 0.3s;
+    }
+    .modal-overlay.show .modal {
+      transform: translateY(0);
+    }
+    .modal-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    .modal-close {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: transparent;
+      color: var(--text-secondary);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .modal-close:hover {
+      background-color: var(--background);
+      color: var(--text-primary);
+    }
+    .modal-body {
+      padding: 1.5rem;
+    }
+    .modal-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      background-color: #f9fafb;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      padding: 0.625rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      transition: var(--transition);
+    }
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 1200px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 侧边栏 -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Z</div>
+      <div class="sidebar-title">浙财智能考试系统</div>
+    </div>
+    <div class="sidebar-menu">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">系统管理</div>
+        <a href="index.html" class="sidebar-link">
+          <i class="ri-dashboard-line sidebar-icon"></i>
+          <span>系统概览</span>
+        </a>
+        <a href="user-management.html" class="sidebar-link">
+          <i class="ri-user-settings-line sidebar-icon"></i>
+          <span>用户管理</span>
+        </a>
+        <a href="subject-management.html" class="sidebar-link">
+          <i class="ri-book-open-line sidebar-icon"></i>
+          <span>学科管理</span>
+        </a>
+        <a href="question-bank.html" class="sidebar-link active">
+          <i class="ri-question-answer-line sidebar-icon"></i>
+          <span>题库管理</span>
+        </a>
+        <a href="system-settings.html" class="sidebar-link">
+          <i class="ri-settings-line sidebar-icon"></i>
+          <span>系统设置</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">账户</div>
+        <a href="login.html" class="sidebar-link">
+          <i class="ri-logout-box-line sidebar-icon"></i>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-avatar">管</div>
+      <div>
+        <div style="font-weight: 500;">系统管理员</div>
+        <div style="font-size: 0.75rem; color: #6b7280;">超级管理员</div>
+      </div>
+    </div>
+  </div>
+  <!-- 主内容区域 -->
+  <div class="main-content">
+    <div class="topbar">
+      <h1 class="page-title">题库管理</h1>
+      <button class="btn btn-primary" id="addQuestionBtn">
+        <i class="ri-add-line btn-icon"></i>
+        添加题目
+      </button>
+    </div>
+    <!-- 筛选区域 -->
+    <div class="filter-area">
+      <div class="search-box">
+        <i class="ri-search-line search-icon"></i>
+        <input type="text" class="search-input" placeholder="搜索题目...">
+      </div>
+      <select class="filter-select" id="subjectFilter">
+        <option value="all">所有学科</option>
+        <option value="hsk">HSK中文考试</option>
+        <option value="cet4">大学英语四级</option>
+        <option value="math_advanced">高等数学</option>
+        <option value="programming_java">Java编程</option>
+      </select>
+      <select class="filter-select" id="typeFilter">
+        <option value="all">所有题型</option>
+        <option value="single_choice">单选题</option>
+        <option value="multiple_choice">多选题</option>
+        <option value="fill_blank">填空题</option>
+        <option value="essay">简答题</option>
+        <option value="calculation">计算题</option>
+      </select>
+      <select class="filter-select" id="statusFilter">
+        <option value="all">所有状态</option>
+        <option value="active">已启用</option>
+        <option value="inactive">未启用</option>
+        <option value="pending">待审核</option>
+      </select>
+      <button class="btn btn-outline" id="filterBtn">
+        <i class="ri-filter-3-line btn-icon"></i>
+        筛选
+      </button>
+    </div>
+    <!-- 题目列表卡片 -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">题目列表</h2>
+      </div>
+      <div class="table-container">
+        <table class="data-table" id="questionsTable">
+          <thead>
+            <tr>
+              <th width="10%">题目ID</th>
+              <th width="30%">题干摘要</th>
+              <th width="15%">学科</th>
+              <th width="10%">题型</th>
+              <th width="10%">难度</th>
+              <th width="10%">状态</th>
+              <th width="15%">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 题目数据通过JS加载 -->
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <div class="pagination-info">显示 1-10，共 50 条</div>
+        <div class="pagination-controls">
+          <button class="page-btn" disabled><i class="ri-arrow-left-s-line"></i></button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">...</button>
+          <button class="page-btn">5</button>
+          <button class="page-btn"><i class="ri-arrow-right-s-line"></i></button>
+        </div>
+      </div>
+    </div>
+    <!-- 添加/编辑题目模态框 -->
+    <div class="modal-overlay" id="questionModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalTitle">添加新题目</h3>
+          <button class="modal-close" id="closeModal" tabindex="0" aria-label="关闭弹窗">
+            <i class="ri-close-line"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="questionForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="questionId" class="form-label">题目ID</label>
+                <input type="text" id="questionId" class="form-input" placeholder="如 Q1001" required>
+              </div>
+              <div class="form-group">
+                <label for="stem" class="form-label">题干摘要</label>
+                <input type="text" id="stem" class="form-input" placeholder="题目内容摘要" required>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="subject" class="form-label">学科</label>
+                <select id="subject" class="form-select" required>
+                  <option value="">选择学科</option>
+                  <option value="HSK中文考试">HSK中文考试</option>
+                  <option value="大学英语四级">大学英语四级</option>
+                  <option value="高等数学">高等数学</option>
+                  <option value="Java编程">Java编程</option>
+                  <option value="经济学基础">经济学基础</option>
+                  <option value="会计学">会计学</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="type" class="form-label">题型</label>
+                <select id="type" class="form-select" required>
+                  <option value="">选择题型</option>
+                  <option value="单选题">单选题</option>
+                  <option value="多选题">多选题</option>
+                  <option value="填空题">填空题</option>
+                  <option value="简答题">简答题</option>
+                  <option value="计算题">计算题</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="difficulty" class="form-label">难度</label>
+                <select id="difficulty" class="form-select" required>
+                  <option value="">选择难度</option>
+                  <option value="易">易</option>
+                  <option value="中">中</option>
+                  <option value="难">难</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="status" class="form-label">状态</label>
+                <select id="status" class="form-select">
+                  <option value="active">已启用</option>
+                  <option value="inactive">未启用</option>
+                  <option value="pending">待审核</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" id="cancelBtn">取消</button>
+          <button class="btn btn-primary" id="saveQuestionBtn">保存</button>
+        </div>
+      </div>
+    </div>
+    <div class="toast" id="toast"></div>
+  </div>
+  <script>
+    // 模拟题目数据
+    const mockQuestions = [
+      {
+        id: 'Q1001',
+        stem: '下列哪项不是Java的基本数据类型？',
+        subject: 'Java编程',
+        type: '单选题',
+        difficulty: '中',
+        status: 'active'
+      },
+      {
+        id: 'Q1002',
+        stem: '已知集合A={1,2,3},B={2,3,4},则A∩B=?',
+        subject: '高等数学',
+        type: '单选题',
+        difficulty: '易',
+        status: 'active'
+      },
+      {
+        id: 'Q1003',
+        stem: '请写出"经济学"英文单词。',
+        subject: '大学英语四级',
+        type: '填空题',
+        difficulty: '易',
+        status: 'inactive'
+      },
+      {
+        id: 'Q1004',
+        stem: '"中国的首都是哪里？"的正确答案是？',
+        subject: 'HSK中文考试',
+        type: '单选题',
+        difficulty: '易',
+        status: 'active'
+      },
+      {
+        id: 'Q1005',
+        stem: '请简述会计的基本假设。',
+        subject: '会计学',
+        type: '简答题',
+        difficulty: '中',
+        status: 'pending'
+      },
+      {
+        id: 'Q1006',
+        stem: '下列哪个不是经济学的基本问题？',
+        subject: '经济学基础',
+        type: '单选题',
+        difficulty: '难',
+        status: 'active'
+      }
+    ];
+    let editingQuestionId = null;
+    // Toast提示
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.position = 'fixed';
+      toast.style.bottom = '2rem';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%)';
+      toast.style.padding = '0.75rem 1.5rem';
+      toast.style.borderRadius = '0.5rem';
+      toast.style.backgroundColor = 'var(--text-primary)';
+      toast.style.color = 'white';
+      toast.style.zIndex = '1000';
+      toast.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.15)';
+      toast.style.opacity = '1';
+      setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+    }
+    // 显示模态框
+    function showModal(question = null) {
+      const modal = document.getElementById('questionModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const form = document.getElementById('questionForm');
+      if (question) {
+        modalTitle.textContent = `编辑题目: ${question.stem}`;
+        form.questionId.value = question.id;
+        form.questionId.disabled = true;
+        form.stem.value = question.stem;
+        form.subject.value = question.subject;
+        form.type.value = question.type;
+        form.difficulty.value = question.difficulty;
+        form.status.value = question.status;
+        editingQuestionId = question.id;
+      } else {
+        modalTitle.textContent = '添加新题目';
+        form.reset();
+        form.questionId.disabled = false;
+        editingQuestionId = null;
+      }
+      modal.classList.add('show');
+    }
+    // 关闭模态框
+    function closeModal() {
+      const modal = document.getElementById('questionModal');
+      modal.classList.remove('show');
+    }
+    // 渲染题目表格
+    function renderQuestions(questions) {
+      const tableBody = document.querySelector('#questionsTable tbody');
+      tableBody.innerHTML = '';
+      if (questions.length === 0) {
+        const emptyRow = document.createElement('tr');
+        emptyRow.innerHTML = `<td colspan="7" style="text-align:center;padding:2rem;color:var(--text-secondary);">
+          <i class="ri-file-search-line" style="font-size:2rem;"></i><br>没有找到匹配的题目
+        </td>`;
+        tableBody.appendChild(emptyRow);
+        return;
+      }
+      questions.forEach(q => {
+        let statusInfo = { class: '', text: '' };
+        if (q.status === 'active') statusInfo = { class: 'status-active', text: '已启用' };
+        else if (q.status === 'inactive') statusInfo = { class: 'status-inactive', text: '未启用' };
+        else if (q.status === 'pending') statusInfo = { class: 'status-pending', text: '待审核' };
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${q.id}</td>
+          <td>${q.stem}</td>
+          <td>${q.subject}</td>
+          <td>${q.type}</td>
+          <td>${q.difficulty}</td>
+          <td><span class="status-badge ${statusInfo.class}">${statusInfo.text}</span></td>
+          <td>
+            <div class="actions-cell">
+              <button class="action-btn edit-btn" title="编辑" data-id="${q.id}"><i class="ri-edit-line"></i></button>
+              <button class="action-btn delete-btn" title="删除" data-id="${q.id}"><i class="ri-delete-bin-line"></i></button>
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      bindTableEvents();
+    }
+    // 绑定表格按钮事件
+    function bindTableEvents() {
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.onclick = function() {
+          const id = this.getAttribute('data-id');
+          const q = mockQuestions.find(q => q.id === id);
+          if (q) showModal(q);
+        };
+      });
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.onclick = function() {
+          const id = this.getAttribute('data-id');
+          const q = mockQuestions.find(q => q.id === id);
+          if (q && confirm(`确定要删除题目 ${q.stem} 吗？`)) {
+            const idx = mockQuestions.findIndex(q => q.id === id);
+            if (idx > -1) {
+              mockQuestions.splice(idx, 1);
+              renderQuestions(mockQuestions);
+              showToast('已删除题目: ' + q.stem);
+            }
+          }
+        };
+      });
+    }
+    // 保存题目
+    function saveQuestion() {
+      const form = document.getElementById('questionForm');
+      const id = form.questionId.value.trim();
+      const stem = form.stem.value.trim();
+      const subject = form.subject.value;
+      const type = form.type.value;
+      const difficulty = form.difficulty.value;
+      const status = form.status.value;
+      if (!id || !stem || !subject || !type || !difficulty) {
+        showToast('请填写所有必填项');
+        return;
+      }
+      if (editingQuestionId) {
+        // 编辑
+        const q = mockQuestions.find(q => q.id === editingQuestionId);
+        if (q) {
+          q.stem = stem;
+          q.subject = subject;
+          q.type = type;
+          q.difficulty = difficulty;
+          q.status = status;
+          showToast('题目信息已更新');
+        }
+      } else {
+        // 新增
+        if (mockQuestions.some(q => q.id === id)) {
+          showToast('题目ID已存在');
+          return;
+        }
+        mockQuestions.push({ id, stem, subject, type, difficulty, status });
+        showToast('已添加新题目');
+      }
+      renderQuestions(mockQuestions);
+      closeModal();
+    }
+    // 搜索和筛选
+    function filterQuestions() {
+      const subject = document.getElementById('subjectFilter').value;
+      const type = document.getElementById('typeFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      const search = document.querySelector('.search-input').value.trim().toLowerCase();
+      let filtered = mockQuestions.filter(q => {
+        if (subject !== 'all' && q.subject !== document.querySelector(`#subjectFilter option[value="${subject}"]`).textContent) return false;
+        if (type !== 'all' && q.type !== document.querySelector(`#typeFilter option[value="${type}"]`).textContent) return false;
+        if (status !== 'all' && q.status !== status) return false;
+        if (search && !q.stem.toLowerCase().includes(search) && !q.id.toLowerCase().includes(search)) return false;
+        return true;
+      });
+      renderQuestions(filtered);
+    }
+    // 事件绑定
+    document.addEventListener('DOMContentLoaded', function() {
+      renderQuestions(mockQuestions);
+      // 添加题目按钮
+      document.getElementById('addQuestionBtn').onclick = () => showModal();
+      // 关闭/取消按钮
+      document.getElementById('closeModal').onclick = closeModal;
+      document.getElementById('cancelBtn').onclick = closeModal;
+      // 保存按钮
+      document.getElementById('saveQuestionBtn').onclick = function(e) {
+        e.preventDefault();
+        saveQuestion();
+      };
+      // 筛选按钮
+      document.getElementById('filterBtn').onclick = filterQuestions;
+      // 搜索输入回车
+      document.querySelector('.search-input').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') filterQuestions();
+      });
+    });
+  </script>
+</body>
+</html>

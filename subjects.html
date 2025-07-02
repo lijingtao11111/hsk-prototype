@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - 学科选择</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css">
+  <style>
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--spacing-6);
+    }
+    
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-8);
+      flex-wrap: wrap;
+      gap: var(--spacing-4);
+    }
+    
+    .filter-button {
+      padding: var(--spacing-2) var(--spacing-4);
+      border-radius: var(--radius-full);
+      background-color: var(--bg-white);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+    
+    .filter-button:hover {
+      background-color: var(--gray-100);
+      border-color: var(--gray-400);
+    }
+    
+    .filter-button.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .search-box {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 200px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: var(--spacing-2) var(--spacing-4);
+      background-color: var(--bg-white);
+      transition: all var(--transition);
+    }
+    
+    .search-box:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 0.875rem;
+      padding: var(--spacing-1) 0;
+    }
+    
+    .search-box i {
+      color: var(--text-secondary);
+      margin-right: var(--spacing-2);
+    }
+    
+    .subject-icon {
+      width: 64px;
+      height: 64px;
+      background-color: var(--primary-light);
+      border-radius: var(--radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 1.75rem;
+      margin-bottom: var(--spacing-4);
+      transition: all var(--transition);
+    }
+    
+    .subject-card:hover .subject-icon {
+      transform: scale(1.1);
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .page-header {
+      margin-bottom: var(--spacing-8);
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-2);
+      display: flex;
+      align-items: center;
+    }
+    
+    .page-title i {
+      margin-right: var(--spacing-3);
+      font-size: 2rem;
+      color: var(--primary);
+    }
+    
+    .page-description {
+      color: var(--text-secondary);
+      max-width: 600px;
+    }
+    
+    @media (max-width: 768px) {
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .search-box {
+        order: -1;
+        margin-bottom: var(--spacing-4);
+      }
+      
+      .filter-buttons {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: var(--spacing-2);
+        gap: var(--spacing-2);
+        width: 100%;
+      }
+      
+      .filter-button {
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+    }
+    
+    .subject-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: var(--spacing-1) var(--spacing-2);
+      border-radius: var(--radius-full);
+      margin-left: var(--spacing-2);
+    }
+    
+    .subject-card-description {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-bottom: var(--spacing-4);
+      line-height: 1.5;
+    }
+    
+    .subject-card-stats {
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      color: var(--text-secondary);
+    }
+    
+    .subject-card-stats span {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-left: var(--spacing-1);
+    }
+    
+    .subject-card-action {
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+    
+    .subject-card-action i {
+      margin-left: var(--spacing-1);
+      transition: transform var(--transition);
+    }
+    
+    .subject-card:hover .subject-card-action i {
+      transform: translateX(3px);
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="home.html" class="navbar-brand">
+        <i class="ri-graduation-cap-line mr-2"></i>
+        智能考试系统
+      </a>
+      
+      <ul class="navbar-menu">
+        <li class="navbar-item"><a href="home.html" class="navbar-link">首页</a></li>
+        <li class="navbar-item"><a href="subjects.html" class="navbar-link active">学科选择</a></li>
+        <li class="navbar-item"><a href="wrong-questions.html" class="navbar-link">错题本</a></li>
+        <li class="navbar-item"><a href="profile.html" class="navbar-link">个人中心</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <div class="container" style="padding-top: var(--spacing-8); padding-bottom: var(--spacing-16);">
+    <!-- 页面标题 -->
+    <div class="page-header">
+      <h1 class="page-title fade-in">
+        <i class="ri-book-open-line"></i>
+        <span>学科选择</span>
+      </h1>
+      <p class="page-description fade-in delay-1">
+        浏览并选择您想要学习的学科，我们提供多种专业领域的智能练习系统
+      </p>
+    </div>
+    
+    <!-- 过滤栏 -->
+    <div class="filter-bar fade-in delay-2">
+      <div class="filter-buttons">
+        <button class="filter-button active">全部</button>
+        <button class="filter-button">语言类</button>
+        <button class="filter-button">理工类</button>
+        <button class="filter-button">文史类</button>
+        <button class="filter-button">技能类</button>
+      </div>
+      
+      <div class="search-box">
+        <i class="ri-search-line"></i>
+        <input type="text" placeholder="搜索学科...">
+      </div>
+    </div>
+    
+    <!-- 学科网格 -->
+    <div class="subject-grid">
+      <!-- HSK四级 -->
+      <a href="subject-detail.html?subject=hsk4" class="subject-card fade-in delay-1">
+        <div class="subject-card-inner">
+          <div class="subject-icon">
+            <i class="ri-translate"></i>
+          </div>
+          <h3 class="subject-card-title">HSK四级</h3>
+          <div class="subject-card-badge">语言类</div>
+          <p class="subject-card-description">
+            HSK（汉语水平考试）四级词汇与语法练习，适合具有一定汉语基础的学习者
+          </p>
+          <div class="subject-card-footer">
+            <div class="subject-card-stats">
+              <i class="ri-question-line mr-1"></i>题目: <span>2500+</span>
+            </div>
+            <div class="subject-card-action">
+              <span>开始学习</span>
+              <i class="ri-arrow-right-line"></i>
+            </div>
+          </div>
+        </div>
+      </a>
+      
+      <!-- HSK五级 -->
+      <a href="subject-detail.html?subject=hsk5" class="subject-card fade-in delay-2">
+        <div class="subject-card-inner">
+          <div class="subject-icon">
+            <i class="ri-translate"></i>
+          </div>
+          <h3 class="subject-card-title">HSK五级</h3>
+          <div class="subject-card-badge">语言类</div>
+          <p class="subject-card-description">
+            HSK（汉语水平考试）五级词汇与语法练习，适合中高级汉语学习者
+          </p>
+          <div class="subject-card-footer">
+            <div class="subject-card-stats">
+              <i class="ri-question-line mr-1"></i>题目: <span>3200+</span>
+            </div>
+            <div class="subject-card-action">
+              <span>开始学习</span>
+              <i class="ri-arrow-right-line"></i>
+            </div>
+          </div>
+        </div>
+      </a>
+      
+      <!-- 大学英语四级 -->
+      <a href="subject-detail.html?subject=cet4" class="subject-card fade-in delay-3">
+        <div class="subject-card-inner">
+          <div class="subject-icon">
+            <i class="ri-english-input"></i>
+          </div>
+          <h3 class="subject-card-title">大学英语四级</h3>
+          <div class="subject-card-badge">语言类</div>
+          <p class="subject-card-description">
+            CET-4英语听力、阅读、写作练习，提升大学英语四级应试能力
+          </p>
+          <div class="subject-card-footer">
+            <div class="subject-card-stats">
+              <i class="ri-question-line mr-1"></i>题目: <span>5000+</span>
+            </div>
+            <div class="subject-card-action">
+              <span>开始学习</span>
+              <i class="ri-arrow-right-line"></i>
+            </div>
+          </div>
+        </div>
+      </a>
+      
+      <!-- 高等数学 -->
+      <a href="subject-detail.html?subject=math" class="subject-card fade-in delay-1">
+        <div class="subject-card-inner">
+          <div class="subject-icon">
+            <i class="ri-functions"></i>
+          </div>
+          <h3 class="subject-card-title">高等数学</h3>
+          <div class="subject-card-badge">理工类</div>
+          <p class="subject-card-description">
+            大学高等数学微积分、线性代数练习，帮助理解数学概念和解题技巧
+          </p>
+          <div class="subject-card-footer">
+            <div class="subject-card-stats">
+              <i class="ri-question-line mr-1"></i>题目: <span>1800+</span>
+            </div>
+            <div class="subject-card-action">
+              <span>开始学习</span>
+              <i class="ri-arrow-right-line"></i>
+            </div>
+          </div>
+        </div>
+      </a>
+      
+      <!-- 程序设计 -->
+      <a href="subject-detail.html?subject=prog" class="subject-card fade-in delay-2">
+        <div class="subject-card-inner">
+          <div class="subject-icon">
+            <i class="ri-code-s-slash-line"></i>
+          </div>
+          <h3 class="subject-card-title">程序设计</h3>
+          <div class="subject-card-badge">技能类</div>
+          <p class="subject-card-description">
+            计算机程序设计基础知识与算法练习，提升编程能力和算法思维
+          </p>
+          <div class="subject-card-footer">
+            <div class="subject-card-stats">
+              <i class="ri-question-line mr-1"></i>题目: <span>1200+</span>
+            </div>
+            <div class="subject-card-action">
+              <span>开始学习</span>
+              <i class="ri-arrow-right-line"></i>
+            </div>
+          </div>
+        </div>
+      </a>
+      
+      <!-- 经济学原理 -->
+      <a href="subject-detail.html?subject=econ" class="subject-card fade-in delay-3">
+        <div class="subject-card-inner">
+          <div class="subject-icon">
+            <i class="ri-line-chart-line"></i>
+          </div>
+          <h3 class="subject-card-title">经济学原理</h3>
+          <div class="subject-card-badge">文史类</div>
+          <p class="subject-card-description">
+            经济学基本原理与应用练习，帮助理解微观和宏观经济学概念
+          </p>
+          <div class="subject-card-footer">
+            <div class="subject-card-stats">
+              <i class="ri-question-line mr-1"></i>题目: <span>1500+</span>
+            </div>
+            <div class="subject-card-action">
+              <span>开始学习</span>
+              <i class="ri-arrow-right-line"></i>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  
+  <!-- 移动端底部导航 -->
+  <nav class="mobile-navbar">
+    <ul class="mobile-navbar-menu">
+      <li class="mobile-navbar-item">
+        <a href="home.html" class="mobile-navbar-link">
+          <i class="ri-home-5-line mobile-navbar-icon"></i>
+          <span>首页</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="subjects.html" class="mobile-navbar-link active">
+          <i class="ri-book-open-line mobile-navbar-icon"></i>
+          <span>学科</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="wrong-questions.html" class="mobile-navbar-link">
+          <i class="ri-error-warning-line mobile-navbar-icon"></i>
+          <span>错题本</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="profile.html" class="mobile-navbar-link">
+          <i class="ri-user-line mobile-navbar-icon"></i>
+          <span>我的</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+  <script src="js/app.js"></script>
+  <script>
+    // 过滤按钮点击事件
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterButtons = document.querySelectorAll('.filter-button');
+      const subjectCards = document.querySelectorAll('.subject-card');
+      
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // 移除所有按钮的激活状态
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          
+          // 添加当前按钮的激活状态
+          this.classList.add('active');
+          
+          const filter = this.textContent.trim();
+          
+          if (filter === '全部') {
+            // 显示所有学科
+            subjectCards.forEach(card => {
+              card.style.display = 'block';
+            });
+          } else {
+            // 根据分类过滤学科
+            subjectCards.forEach(card => {
+              const category = card.querySelector('.subject-card-badge').textContent.trim();
+              
+              if (category === filter) {
+                card.style.display = 'block';
+              } else {
+                card.style.display = 'none';
+              }
+            });
+          }
+        });
+      });
+      
+      // 搜索功能
+      const searchInput = document.querySelector('.search-box input');
+      
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        
+        subjectCards.forEach(card => {
+          const title = card.querySelector('.subject-card-title').textContent.toLowerCase();
+          const description = card.querySelector('p').textContent.toLowerCase();
+          
+          if (title.includes(searchTerm) || description.includes(searchTerm)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html> 

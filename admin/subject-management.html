@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - 学科管理</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #eef2ff;
+      --primary-dark: #4338ca;
+      --secondary: #6b7280;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --background: #f9fafb;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --border-radius: 0.5rem;
+      --transition: all 0.2s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--background); color: var(--text-primary); display: flex; min-height: 100vh; }
+    .sidebar { width: 250px; background-color: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 10; }
+    .sidebar-header { padding: 1.5rem; display: flex; align-items: center; border-bottom: 1px solid var(--border); }
+    .sidebar-logo { width: 2.5rem; height: 2.5rem; border-radius: 8px; background-color: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.25rem; margin-right: 0.75rem; }
+    .sidebar-title { font-weight: 600; font-size: 1.125rem; }
+    .sidebar-menu { flex: 1; padding: 1.5rem 0; overflow-y: auto; }
+    .sidebar-section { margin-bottom: 1.5rem; }
+    .sidebar-section-title { padding: 0 1.5rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.75rem; }
+    .sidebar-link { display: flex; align-items: center; padding: 0.75rem 1.5rem; color: var(--text-primary); text-decoration: none; font-weight: 500; transition: all 0.2s; }
+    .sidebar-link:hover { background-color: var(--primary-light); }
+    .sidebar-link.active { background-color: var(--primary-light); color: var(--primary); border-left: 3px solid var(--primary); }
+    .sidebar-icon { margin-right: 0.75rem; font-size: 1.25rem; }
+    .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; }
+    .sidebar-footer-avatar { width: 2.25rem; height: 2.25rem; border-radius: 8px; background-color: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 600; margin-right: 0.75rem; }
+    .main-content { flex: 1; margin-left: 250px; padding: 1.5rem; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+    .page-title { font-size: 1.5rem; font-weight: 600; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: var(--transition); border: none; }
+    .btn-primary { background-color: var(--primary); color: white; }
+    .btn-primary:hover { background-color: var(--primary-dark); }
+    .btn-outline { background-color: white; border: 1px solid var(--border); color: var(--text-secondary); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.813rem; }
+    .btn-icon { margin-right: 0.375rem; }
+    .card { background-color: white; border-radius: var(--border-radius); box-shadow: var(--card-shadow); border: 1px solid var(--border); overflow: hidden; margin-bottom: 1.5rem; }
+    .card-header { padding: 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background-color: #f9fafb; }
+    .card-title { font-weight: 600; font-size: 1rem; }
+    .card-body { padding: 1.25rem; }
+    .filter-area { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+    .search-box { position: relative; flex: 1; min-width: 200px; }
+    .search-input { width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.5rem; border: 1px solid var(--border); border-radius: 0.375rem; font-size: 0.875rem; outline: none; transition: var(--transition); }
+    .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+    .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1rem; pointer-events: none; }
+    .filter-select { padding: 0.5rem 2rem 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 0.375rem; font-size: 0.875rem; outline: none; appearance: none; background-color: white; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1rem; min-width: 150px; transition: var(--transition); }
+    .filter-select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+    .table-container { overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th, .data-table td { padding: 1rem; text-align: left; }
+    .data-table th { font-weight: 600; color: var(--text-secondary); font-size: 0.875rem; background-color: #f9fafb; border-bottom: 1px solid var(--border); }
+    .data-table td { border-bottom: 1px solid var(--border); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover { background-color: #f9fafb; }
+    .pagination { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; border-top: 1px solid var(--border); background-color: #f9fafb; }
+    .pagination-info { font-size: 0.875rem; color: var(--text-secondary); }
+    .pagination-controls { display: flex; align-items: center; gap: 0.25rem; }
+    .page-btn { width: 2rem; height: 2rem; border-radius: 0.375rem; display: inline-flex; align-items: center; justify-content: center; font-size: 0.875rem; color: var(--text-secondary); background-color: white; border: 1px solid var(--border); cursor: pointer; transition: var(--transition); }
+    .page-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .page-btn.active { background-color: var(--primary); color: white; border-color: var(--primary); }
+    .page-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+    .action-btn { padding: 0.375rem; border-radius: 0.375rem; color: var(--text-secondary); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); background-color: transparent; border: none; }
+    .action-btn:hover { background-color: var(--background); color: var(--primary); }
+    .actions-cell { display: flex; gap: 0.5rem; }
+    @media (max-width: 1200px) { .form-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; } .sidebar.show { transform: translateX(0); } .main-content { margin-left: 0; } .topbar { flex-wrap: wrap; gap: 1rem; } .filter-area { flex-direction: column; } }
+    /* 模态框美化，参考用户管理页面 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal {
+      width: 100%;
+      max-width: 500px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      transform: translateY(-20px);
+      transition: transform 0.3s;
+    }
+    .modal-overlay.show .modal {
+      transform: translateY(0);
+    }
+    .modal-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    .modal-close {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: transparent;
+      color: var(--text-secondary);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .modal-close:hover {
+      background-color: var(--background);
+      color: var(--text-primary);
+    }
+    .modal-body {
+      padding: 1.5rem;
+    }
+    .modal-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      background-color: #f9fafb;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      padding: 0.625rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      transition: var(--transition);
+    }
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 1200px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 侧边栏 -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Z</div>
+      <div class="sidebar-title">浙财智能考试系统</div>
+    </div>
+    <div class="sidebar-menu">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">系统管理</div>
+        <a href="index.html" class="sidebar-link">
+          <i class="ri-dashboard-line sidebar-icon"></i>
+          <span>系统概览</span>
+        </a>
+        <a href="user-management.html" class="sidebar-link">
+          <i class="ri-user-settings-line sidebar-icon"></i>
+          <span>用户管理</span>
+        </a>
+        <a href="subject-management.html" class="sidebar-link active">
+          <i class="ri-book-open-line sidebar-icon"></i>
+          <span>学科管理</span>
+        </a>
+        <a href="question-bank.html" class="sidebar-link">
+          <i class="ri-question-answer-line sidebar-icon"></i>
+          <span>题库管理</span>
+        </a>
+        <a href="system-settings.html" class="sidebar-link">
+          <i class="ri-settings-line sidebar-icon"></i>
+          <span>系统设置</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">账户</div>
+        <a href="login.html" class="sidebar-link">
+          <i class="ri-logout-box-line sidebar-icon"></i>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-avatar">管</div>
+      <div>
+        <div style="font-weight: 500;">系统管理员</div>
+        <div style="font-size: 0.75rem; color: #6b7280;">超级管理员</div>
+      </div>
+    </div>
+  </div>
+  <!-- 主内容区域骨架 -->
+  <div class="main-content">
+    <div class="topbar">
+      <h1 class="page-title">学科管理</h1>
+      <button class="btn btn-primary" id="addSubjectBtn">
+        <i class="ri-add-line btn-icon"></i>
+        添加学科
+      </button>
+    </div>
+    <!-- 筛选区域 -->
+    <div class="filter-area">
+      <div class="search-box">
+        <i class="ri-search-line search-icon"></i>
+        <input type="text" class="search-input" placeholder="搜索学科...">
+      </div>
+      <select class="filter-select" id="categoryFilter">
+        <option value="all">所有类别</option>
+        <option value="language">语言类</option>
+        <option value="science">理工类</option>
+        <option value="arts">文史类</option>
+        <option value="skills">技能类</option>
+      </select>
+      <select class="filter-select" id="statusFilter">
+        <option value="all">所有状态</option>
+        <option value="active">已启用</option>
+        <option value="inactive">未启用</option>
+      </select>
+      <button class="btn btn-outline" id="filterBtn">
+        <i class="ri-filter-3-line btn-icon"></i>
+        筛选
+      </button>
+    </div>
+    <!-- 学科列表卡片 -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">学科列表</h2>
+      </div>
+      <div class="table-container">
+        <table class="data-table" id="subjectsTable">
+          <thead>
+            <tr>
+              <th width="15%">学科ID</th>
+              <th width="20%">名称</th>
+              <th width="15%">类别</th>
+              <th width="15%">题型</th>
+              <th width="20%">描述</th>
+              <th width="10%">状态</th>
+              <th width="10%">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 学科数据通过JS加载 -->
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <div class="pagination-info">显示 1-10，共 30 条</div>
+        <div class="pagination-controls">
+          <button class="page-btn" disabled><i class="ri-arrow-left-s-line"></i></button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">...</button>
+          <button class="page-btn">5</button>
+          <button class="page-btn"><i class="ri-arrow-right-s-line"></i></button>
+        </div>
+      </div>
+    </div>
+    <!-- 添加/编辑学科模态框 -->
+    <div class="modal-overlay" id="subjectModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalTitle">添加新学科</h3>
+          <button class="modal-close" id="closeModal" tabindex="0" aria-label="关闭弹窗">
+            <i class="ri-close-line"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="subjectForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="subjectId" class="form-label">学科ID</label>
+                <input type="text" id="subjectId" class="form-input" placeholder="如 hsk" required>
+              </div>
+              <div class="form-group">
+                <label for="subjectName" class="form-label">名称</label>
+                <input type="text" id="subjectName" class="form-input" placeholder="如 HSK中文考试" required>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="category" class="form-label">类别</label>
+                <select id="category" class="form-select" required>
+                  <option value="">选择类别</option>
+                  <option value="语言类">语言类</option>
+                  <option value="理工类">理工类</option>
+                  <option value="文史类">文史类</option>
+                  <option value="技能类">技能类</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="types" class="form-label">题型</label>
+                <input type="text" id="types" class="form-input" placeholder="如 单选/多选/填空" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="description" class="form-label">描述</label>
+              <input type="text" id="description" class="form-input" placeholder="学科简介">
+            </div>
+            <div class="form-group">
+              <label for="status" class="form-label">状态</label>
+              <select id="status" class="form-select">
+                <option value="active">已启用</option>
+                <option value="inactive">未启用</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" id="cancelBtn">取消</button>
+          <button class="btn btn-primary" id="saveSubjectBtn">保存</button>
+        </div>
+      </div>
+    </div>
+    <div class="toast" id="toast"></div>
+  </div>
+  <script>
+    // 模拟学科数据
+    const mockSubjects = [
+      {
+        id: 'hsk',
+        name: 'HSK中文考试',
+        category: '语言类',
+        types: '单选/多选/填空',
+        description: '国际中文能力标准考试',
+        status: 'active'
+      },
+      {
+        id: 'cet4',
+        name: '大学英语四级',
+        category: '语言类',
+        types: '单选/完形/阅读',
+        description: '全国大学英语四级考试',
+        status: 'active'
+      },
+      {
+        id: 'math_advanced',
+        name: '高等数学',
+        category: '理工类',
+        types: '单选/填空/计算',
+        description: '高等院校理工基础课程',
+        status: 'inactive'
+      },
+      {
+        id: 'programming_java',
+        name: 'Java编程',
+        category: '技能类',
+        types: '编程/选择/填空',
+        description: 'Java语言程序设计',
+        status: 'active'
+      },
+      {
+        id: 'economics',
+        name: '经济学基础',
+        category: '文史类',
+        types: '单选/简答/论述',
+        description: '经济学原理与应用',
+        status: 'active'
+      },
+      {
+        id: 'accounting',
+        name: '会计学',
+        category: '文史类',
+        types: '单选/填空/计算',
+        description: '基础会计理论与实务',
+        status: 'inactive'
+      }
+    ];
+
+    // ========== 重构增删改交互 ========== //
+    let editingSubjectId = null;
+    // Toast提示
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.position = 'fixed';
+      toast.style.bottom = '2rem';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%)';
+      toast.style.padding = '0.75rem 1.5rem';
+      toast.style.borderRadius = '0.5rem';
+      toast.style.backgroundColor = 'var(--text-primary)';
+      toast.style.color = 'white';
+      toast.style.zIndex = '1000';
+      toast.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.15)';
+      toast.style.opacity = '1';
+      setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+    }
+    // 显示模态框
+    function showModal(subject = null) {
+      const modal = document.getElementById('subjectModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const form = document.getElementById('subjectForm');
+      if (subject) {
+        modalTitle.textContent = `编辑学科: ${subject.name}`;
+        form.subjectId.value = subject.id;
+        form.subjectId.disabled = true;
+        form.subjectName.value = subject.name;
+        form.category.value = subject.category;
+        form.types.value = subject.types;
+        form.description.value = subject.description;
+        form.status.value = subject.status;
+        editingSubjectId = subject.id;
+      } else {
+        modalTitle.textContent = '添加新学科';
+        form.reset();
+        form.subjectId.disabled = false;
+        editingSubjectId = null;
+      }
+      modal.classList.add('show');
+    }
+    // 关闭模态框
+    function closeModal() {
+      const modal = document.getElementById('subjectModal');
+      modal.classList.remove('show');
+    }
+    // 渲染学科表格
+    function renderSubjects(subjects) {
+      const tableBody = document.querySelector('#subjectsTable tbody');
+      tableBody.innerHTML = '';
+      if (subjects.length === 0) {
+        const emptyRow = document.createElement('tr');
+        emptyRow.innerHTML = `<td colspan="7" style="text-align:center;padding:2rem;color:var(--text-secondary);">
+          <i class="ri-file-search-line" style="font-size:2rem;"></i><br>没有找到匹配的学科
+        </td>`;
+        tableBody.appendChild(emptyRow);
+        return;
+      }
+      subjects.forEach(subj => {
+        const row = document.createElement('tr');
+        const statusInfo = subj.status === 'active'
+          ? { class: 'status-active', text: '已启用' }
+          : { class: 'status-inactive', text: '未启用' };
+        row.innerHTML = `
+          <td>${subj.id}</td>
+          <td>${subj.name}</td>
+          <td>${subj.category}</td>
+          <td>${subj.types}</td>
+          <td>${subj.description}</td>
+          <td><span class="status-badge ${statusInfo.class}">${statusInfo.text}</span></td>
+          <td>
+            <div class="actions-cell">
+              <button class="action-btn edit-btn" title="编辑" data-id="${subj.id}"><i class="ri-edit-line"></i></button>
+              <button class="action-btn delete-btn" title="删除" data-id="${subj.id}"><i class="ri-delete-bin-line"></i></button>
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      bindTableEvents();
+    }
+    // 绑定表格按钮事件
+    function bindTableEvents() {
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.onclick = function() {
+          const id = this.getAttribute('data-id');
+          const subj = mockSubjects.find(s => s.id === id);
+          if (subj) showModal(subj);
+        };
+      });
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.onclick = function() {
+          const id = this.getAttribute('data-id');
+          const subj = mockSubjects.find(s => s.id === id);
+          if (subj && confirm(`确定要删除学科 ${subj.name} 吗？`)) {
+            const idx = mockSubjects.findIndex(s => s.id === id);
+            if (idx > -1) {
+              mockSubjects.splice(idx, 1);
+              renderSubjects(mockSubjects);
+              showToast('已删除学科: ' + subj.name);
+            }
+          }
+        };
+      });
+    }
+    // 保存学科
+    function saveSubject() {
+      const form = document.getElementById('subjectForm');
+      const id = form.subjectId.value.trim();
+      const name = form.subjectName.value.trim();
+      const category = form.category.value;
+      const types = form.types.value.trim();
+      const description = form.description.value.trim();
+      const status = form.status.value;
+      if (!id || !name || !category || !types) {
+        showToast('请填写所有必填项');
+        return;
+      }
+      if (editingSubjectId) {
+        // 编辑
+        const subj = mockSubjects.find(s => s.id === editingSubjectId);
+        if (subj) {
+          subj.name = name;
+          subj.category = category;
+          subj.types = types;
+          subj.description = description;
+          subj.status = status;
+          showToast('学科信息已更新');
+        }
+      } else {
+        // 新增
+        if (mockSubjects.some(s => s.id === id)) {
+          showToast('学科ID已存在');
+          return;
+        }
+        mockSubjects.push({ id, name, category, types, description, status });
+        showToast('已添加新学科');
+      }
+      renderSubjects(mockSubjects);
+      closeModal();
+    }
+    // 搜索和筛选
+    function filterSubjects() {
+      const category = document.getElementById('categoryFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      const search = document.querySelector('.search-input').value.trim().toLowerCase();
+      let filtered = mockSubjects.filter(s => {
+        if (category !== 'all' && s.category !== (category === 'language' ? '语言类' : category === 'science' ? '理工类' : category === 'arts' ? '文史类' : '技能类')) return false;
+        if (status !== 'all' && s.status !== status) return false;
+        if (search && !s.name.toLowerCase().includes(search) && !s.id.toLowerCase().includes(search)) return false;
+        return true;
+      });
+      renderSubjects(filtered);
+    }
+    // 事件绑定
+    document.addEventListener('DOMContentLoaded', function() {
+      renderSubjects(mockSubjects);
+      // 添加学科按钮
+      document.getElementById('addSubjectBtn').onclick = () => showModal();
+      // 关闭/取消按钮
+      document.getElementById('closeModal').onclick = closeModal;
+      document.getElementById('cancelBtn').onclick = closeModal;
+      // 保存按钮
+      document.getElementById('saveSubjectBtn').onclick = function(e) {
+        e.preventDefault();
+        saveSubject();
+      };
+      // 筛选按钮
+      document.getElementById('filterBtn').onclick = filterSubjects;
+      // 搜索输入回车
+      document.querySelector('.search-input').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') filterSubjects();
+      });
+    });
+  </script>
+</body>
+</html>

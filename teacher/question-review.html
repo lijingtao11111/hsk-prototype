@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - 题目审核</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    /* 基础样式设置 */
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #eef2ff;
+      --primary-dark: #4338ca;
+      --secondary: #6b7280;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --background: #f9fafb;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --border-radius: 0.5rem;
+      --transition: all 0.2s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--background);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* 侧边栏样式 */
+    .sidebar {
+      width: 250px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 10;
+    }
+    
+    .sidebar-header {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .sidebar-logo {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 8px;
+      background-color: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.25rem;
+      margin-right: 0.75rem;
+    }
+    
+    .sidebar-title {
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    
+    .sidebar-menu {
+      flex: 1;
+      padding: 1.5rem 0;
+      overflow-y: auto;
+    }
+    
+    .sidebar-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .sidebar-section-title {
+      padding: 0 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+    
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .sidebar-link:hover {
+      background-color: var(--primary-light);
+    }
+    
+    .sidebar-link.active {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-left: 3px solid var(--primary);
+    }
+    
+    .sidebar-icon {
+      margin-right: 0.75rem;
+      font-size: 1.25rem;
+    }
+    
+    .sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+    }
+    
+    .sidebar-footer-avatar {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 8px;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 0.75rem;
+    }
+    
+    /* 主内容区域样式 */
+    .main-content {
+      flex: 1;
+      margin-left: 250px;
+      padding: 1.5rem;
+    }
+    
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+    }
+    
+    .topbar-icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      margin-left: 0.75rem;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .topbar-icon:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+    
+    .topbar-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: var(--danger);
+      color: white;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* 审核页面样式 */
+    .review-container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    
+    .filter-container {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      padding: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      transition: box-shadow 0.3s;
+    }
+    
+    .filter-container.sticky {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .filter-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .filter-button {
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: var(--transition);
+      background-color: white;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    
+    .filter-button:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary-light);
+    }
+    
+    .filter-button.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .filter-dropdown {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .filter-select {
+      padding: 0.5rem 2rem 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      outline: none;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      background-color: white;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      background-size: 1rem;
+      min-width: 140px;
+      transition: var(--transition);
+    }
+    
+    .filter-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+    
+    .btn-outline {
+      background-color: white;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    .review-item {
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      background-color: white;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+    }
+    
+    .review-item:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+    
+    .review-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background-color: #f9fafb;
+    }
+    
+    .review-item-title {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+    
+    .review-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-left: 0.75rem;
+    }
+    
+    .review-badge.pending {
+      background-color: var(--warning-light);
+      color: var(--warning);
+    }
+    
+    .review-badge.approved {
+      background-color: var(--success-light);
+      color: var(--success);
+    }
+    
+    .review-badge.rejected {
+      background-color: var(--danger-light);
+      color: var(--danger);
+    }
+    
+    .review-item-meta {
+      font-size: 0.813rem;
+      color: var(--text-secondary);
+    }
+    
+    .review-item-content {
+      padding: 1.5rem;
+    }
+    
+    /* 空状态样式 */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+      background-color: white;
+      border-radius: var(--border-radius);
+      border: 1px dashed var(--border);
+      margin: 2rem 0;
+    }
+    
+    .empty-icon {
+      font-size: 3rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      opacity: 0.5;
+    }
+    
+    .empty-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+    
+    .empty-description {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      max-width: 400px;
+      margin-bottom: 1.5rem;
+    }
+    
+    .empty-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+    }
+    
+    .empty-action:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    /* 问题类型样式 */
+    .question-type {
+      padding: 0.25rem 0.75rem;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-radius: 9999px;
+      font-weight: 500;
+    }
+    
+    /* Toast提示样式 */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      background-color: var(--text-primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      opacity: 0;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    
+    /* 问题卡片样式 */
+    .question-preview {
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      overflow: hidden;
+    }
+    
+    .question-card {
+      padding: 1.25rem;
+      background-color: white;
+    }
+    
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+    
+    .question-stem {
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+    }
+    
+    .question-options {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.25rem 0;
+    }
+    
+    .question-option {
+      display: flex;
+      align-items: flex-start;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      margin-bottom: 0.5rem;
+      transition: var(--transition);
+    }
+    
+    .question-option:hover {
+      background-color: var(--primary-light);
+    }
+    
+    .question-option.correct-option {
+      background-color: var(--success-light);
+      border-color: var(--success);
+    }
+    
+    .question-option-letter {
+      width: 1.5rem;
+      height: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--background);
+      border-radius: 50%;
+      margin-right: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    
+    .correct-option .question-option-letter {
+      background-color: var(--success);
+      color: white;
+    }
+    
+    .answer-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+    
+    .answer-tab {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.875rem;
+      border-bottom: 2px solid transparent;
+    }
+    
+    .answer-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    
+    .answer-content {
+      background-color: #f9fafb;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+    }
+    
+    .answer-analysis p {
+      margin: 0 0 0.5rem 0;
+      line-height: 1.6;
+    }
+    
+    .answer-analysis p:last-child {
+      margin-bottom: 0;
+    }
+    
+    /* 按钮样式 */
+    .btn-sm {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.813rem;
+    }
+    
+    .btn-success {
+      background-color: var(--success);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background-color: #0ca678;
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #e11d48;
+    }
+    
+    .review-item-footer {
+      display: flex;
+      justify-content: flex-end;
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      background-color: #f9fafb;
+      gap: 0.5rem;
+    }
+    
+    /* 过滤状态 */
+    .review-item.filtered {
+      display: none;
+    }
+    
+    /* 过滤器徽章 */
+    .filter-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+    
+    .filter-button.active .filter-count {
+      background-color: white;
+      color: var(--primary);
+    }
+    
+    /* 响应式样式 */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      
+      .sidebar.show {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .filter-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .filter-buttons {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+      }
+      
+      .filter-dropdown {
+        width: 100%;
+      }
+      
+      .filter-select {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 侧边栏 -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Z</div>
+      <div class="sidebar-title">浙财智能考试系统</div>
+    </div>
+    
+    <div class="sidebar-menu">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">教学管理</div>
+        <a href="student-progress.html" class="sidebar-link">
+          <i class="ri-line-chart-line sidebar-icon"></i>
+          <span>学生进度</span>
+        </a>
+        <a href="question-review.html" class="sidebar-link active">
+          <i class="ri-file-list-3-line sidebar-icon"></i>
+          <span>题目审核</span>
+        </a>
+        <a href="paper-upload.html" class="sidebar-link">
+          <i class="ri-upload-cloud-line sidebar-icon"></i>
+          <span>试卷上传</span>
+        </a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">账户</div>
+        <a href="login.html" class="sidebar-link">
+          <i class="ri-logout-box-line sidebar-icon"></i>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-avatar">李</div>
+      <div>
+        <div style="font-weight: 500;">李教授</div>
+        <div style="font-size: 0.75rem; color: var(--text-secondary);">计算机学院</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 主内容区域 -->
+  <div class="main-content">
+    <div class="topbar">
+      <h1 class="page-title">题目审核</h1>
+    </div>
+    
+    <div class="review-container">
+      <!-- 筛选栏 -->
+      <div class="filter-container" id="filterContainer">
+        <div class="filter-buttons">
+          <button class="filter-button active" data-status="all">
+            全部
+            <span class="filter-count" id="count-all">5</span>
+          </button>
+          <button class="filter-button" data-status="pending">
+            待审核
+            <span class="filter-count" id="count-pending">2</span>
+          </button>
+          <button class="filter-button" data-status="approved">
+            已通过
+            <span class="filter-count" id="count-approved">2</span>
+          </button>
+          <button class="filter-button" data-status="rejected">
+            已拒绝
+            <span class="filter-count" id="count-rejected">1</span>
+          </button>
+        </div>
+        
+        <div class="filter-dropdown">
+          <select class="filter-select" id="type-filter">
+            <option value="all">全部题型</option>
+            <option value="单选题">单选题</option>
+            <option value="阅读理解">阅读理解</option>
+            <option value="选词填空">选词填空</option>
+            <option value="计算题">计算题</option>
+            <option value="编程题">编程题</option>
+          </select>
+          
+          <select class="filter-select" id="source-filter">
+            <option value="all">全部来源</option>
+            <option value="AI解析">AI解析</option>
+            <option value="AI生成">AI生成</option>
+            <option value="试卷解析">试卷解析</option>
+          </select>
+          
+          <button class="btn btn-outline" id="apply-filter">
+            <i class="ri-filter-3-line" style="margin-right: 0.5rem;"></i>
+            筛选
+          </button>
+        </div>
+      </div>
+      
+      <!-- 空数据状态 -->
+      <div class="empty-state" id="emptyState">
+        <i class="ri-file-search-line empty-icon"></i>
+        <h3 class="empty-title">暂无审核题目</h3>
+        <p class="empty-description">
+          当前没有需要审核的题目。您可以通过试卷上传或AI生成获取新题目进行审核。
+        </p>
+        <button class="empty-action">
+          <i class="ri-add-line"></i>
+          <span>添加题目</span>
+        </button>
+      </div>
+      
+      <!-- 审核题目列表 -->
+      <div id="reviewList" style="display: none;">
+        <!-- 题目列表将通过JavaScript加载 -->
+      </div>
+    </div>
+  </div>
+  
+  <div class="toast" id="toast"></div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 加载示例数据
+      loadExampleData();
+      
+      // 显示列表而非空状态
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('reviewList').style.display = 'block';
+      
+      // 初始化筛选功能
+      initFilters();
+      
+      // 初始化滚动监听
+      initScrollListener();
+    });
+    
+    // 初始化筛选功能
+    function initFilters() {
+      // 筛选按钮切换
+      const filterButtons = document.querySelectorAll('.filter-button');
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // 切换活动状态
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          
+          // 应用筛选
+          applyFilters();
+          
+          // 显示提示
+          showToast(`查看${this.textContent.trim().split('\n')[0]}题目`);
+        });
+      });
+      
+      // 筛选按钮点击事件
+      const applyFilterBtn = document.getElementById('apply-filter');
+      if (applyFilterBtn) {
+        applyFilterBtn.addEventListener('click', function() {
+          applyFilters();
+          showToast('已应用筛选条件');
+        });
+      }
+      
+      // 添加题目按钮
+      const addButton = document.querySelector('.empty-action');
+      if (addButton) {
+        addButton.addEventListener('click', function() {
+          window.location.href = 'paper-upload.html';
+        });
+      }
+    }
+    
+    // 应用筛选条件
+    function applyFilters() {
+      // 获取筛选条件
+      const statusFilter = document.querySelector('.filter-button.active').getAttribute('data-status');
+      const typeFilter = document.getElementById('type-filter').value;
+      const sourceFilter = document.getElementById('source-filter').value;
+      
+      // 获取所有题目项
+      const items = document.querySelectorAll('.review-item');
+      
+      // 计数器初始化
+      let countAll = 0;
+      let countPending = 0;
+      let countApproved = 0;
+      let countRejected = 0;
+      
+      // 应用筛选
+      items.forEach(item => {
+        const itemStatus = item.getAttribute('data-status');
+        const itemType = item.querySelector('.question-type').textContent;
+        const itemSource = item.querySelector('.review-item-meta').textContent.split('|')[0].trim().replace('来源: ', '');
+        
+        // 更新计数
+        countAll++;
+        if (itemStatus === 'pending') countPending++;
+        if (itemStatus === 'approved') countApproved++;
+        if (itemStatus === 'rejected') countRejected++;
+        
+        // 确定是否显示此项
+        let showItem = true;
+        
+        // 状态筛选
+        if (statusFilter !== 'all' && itemStatus !== statusFilter) {
+          showItem = false;
+        }
+        
+        // 类型筛选
+        if (typeFilter !== 'all' && itemType !== typeFilter) {
+          showItem = false;
+        }
+        
+        // 来源筛选
+        if (sourceFilter !== 'all' && itemSource !== sourceFilter) {
+          showItem = false;
+        }
+        
+        // 应用筛选
+        if (showItem) {
+          item.classList.remove('filtered');
+        } else {
+          item.classList.add('filtered');
+        }
+      });
+      
+      // 更新计数显示
+      document.getElementById('count-all').textContent = countAll;
+      document.getElementById('count-pending').textContent = countPending;
+      document.getElementById('count-approved').textContent = countApproved;
+      document.getElementById('count-rejected').textContent = countRejected;
+      
+      // 检查是否有匹配项
+      const hasVisibleItems = document.querySelectorAll('.review-item:not(.filtered)').length > 0;
+      
+      // 如果没有匹配项，显示空状态
+      if (!hasVisibleItems) {
+        document.getElementById('emptyState').style.display = 'flex';
+        document.querySelector('.empty-title').textContent = '没有符合条件的题目';
+        document.querySelector('.empty-description').textContent = '尝试更改筛选条件或添加新的题目。';
+      } else {
+        document.getElementById('emptyState').style.display = 'none';
+      }
+    }
+    
+    // 初始化滚动监听
+    function initScrollListener() {
+      const filterContainer = document.getElementById('filterContainer');
+      const initialOffset = filterContainer.offsetTop;
+      
+      window.addEventListener('scroll', function() {
+        if (window.pageYOffset > initialOffset) {
+          filterContainer.classList.add('sticky');
+        } else {
+          filterContainer.classList.remove('sticky');
+        }
+      });
+    }
+    
+    // 显示Toast提示
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+    
+    // 加载示例数据
+    function loadExampleData() {
+      const reviewList = document.getElementById('reviewList');
+      
+      // 示例数据
+      const exampleQuestions = [
+        {
+          id: 'Q20230501001',
+          title: 'HSK四级单选题',
+          status: 'pending',
+          subject: 'HSK',
+          level: '四级',
+          source: 'AI解析',
+          time: '2023-05-01',
+          type: '单选题',
+          content: {
+            stem: '他已经把这本书<strong>看完了</strong>，现在正在看下一本。',
+            options: [
+              { letter: 'A', text: '读过', isCorrect: true },
+              { letter: 'B', text: '用过', isCorrect: false },
+              { letter: 'C', text: '听过', isCorrect: false },
+              { letter: 'D', text: '写过', isCorrect: false }
+            ],
+            explanation: '这道题测试动词替换，"看完"在这里指读完一本书，所以应该选择"读过"。'
+          }
+        },
+        {
+          id: 'Q20230502001',
+          title: 'HSK四级阅读理解题',
+          status: 'pending',
+          subject: 'HSK',
+          level: '四级',
+          source: 'AI生成',
+          time: '2023-05-02',
+          type: '阅读理解',
+          content: {
+            stem: '<p>张明来自中国北方，今年去南方城市工作。南方的夏天很热，但是张明发现，虽然南方的温度比北方高，但是很多人还是喜欢喝热水，吃热的食物。他觉得很奇怪，就问同事王丽。</p><p>王丽告诉他，南方人觉得夏天出汗多，所以要喝热水来帮助身体排汗。而且，南方比较潮湿，喝热水可以让身体更舒服。张明听了以后很有兴趣，决定也试试看。</p><p>过了几天，张明告诉王丽，他现在也开始喜欢在夏天喝热水了，感觉真的很不错。</p><p><strong>根据短文，下面哪句话是正确的？</strong></p>',
+            options: [
+              { letter: 'A', text: '南方的温度比北方低。', isCorrect: false },
+              { letter: 'B', text: '北方人喜欢在夏天喝热水。', isCorrect: false },
+              { letter: 'C', text: '南方比较潮湿。', isCorrect: true },
+              { letter: 'D', text: '张明不喜欢喝热水。', isCorrect: false }
+            ],
+            explanation: '根据短文第二段"南方比较潮湿，喝热水可以让身体更舒服"，可以确定C选项是正确的。A选项与短文中"南方的温度比北方高"相矛盾；B选项在文中没有提及北方人的习惯；D选项与最后一段"张明...开始喜欢在夏天喝热水了"相矛盾。'
+          }
+        },
+        {
+          id: 'Q20230503001',
+          title: '大学英语四级词汇题',
+          status: 'approved',
+          subject: 'CET',
+          level: '四级',
+          source: '试卷解析',
+          time: '2023-05-03',
+          type: '选词填空',
+          content: {
+            stem: 'The scientist made a significant ________ to the field of quantum physics.',
+            options: [
+              { letter: 'A', text: 'contribution', isCorrect: true },
+              { letter: 'B', text: 'dedication', isCorrect: false },
+              { letter: 'C', text: 'celebration', isCorrect: false },
+              { letter: 'D', text: 'promotion', isCorrect: false }
+            ],
+            explanation: '这道题测试词汇搭配，"make a significant contribution to"是固定搭配，表示"对...做出重大贡献"。'
+          }
+        },
+        {
+          id: 'Q20230504001',
+          title: '高等数学计算题',
+          status: 'rejected',
+          subject: 'MATH',
+          level: '大一上',
+          source: 'AI生成',
+          time: '2023-05-04',
+          type: '计算题',
+          content: {
+            stem: '计算极限：$\\lim_{x \\to 0} \\frac{\\sin x}{x}$',
+            explanation: '这是一个重要的基本极限，$\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1$。可以通过夹逼定理证明。',
+            answer: '1'
+          }
+        },
+        {
+          id: 'Q20230505001',
+          title: 'Java程序设计题',
+          status: 'approved',
+          subject: 'CS',
+          level: '基础',
+          source: '试卷解析',
+          time: '2023-05-05',
+          type: '编程题',
+          content: {
+            stem: '编写一个Java方法，计算给定数组中所有元素的平均值。如果数组为空，则返回0。',
+            code: 'public static double average(int[] array) {\n    // 请在此处编写代码\n}',
+            answer: 'public static double average(int[] array) {\n    if (array == null || array.length == 0) {\n        return 0;\n    }\n    \n    double sum = 0;\n    for (int num : array) {\n        sum += num;\n    }\n    \n    return sum / array.length;\n}',
+            explanation: '这道题考察数组遍历和基本计算。首先需要处理边界情况（空数组），然后计算所有元素之和，最后返回平均值。'
+          }
+        }
+      ];
+      
+      // 创建题目列表HTML
+      let html = '';
+      
+      exampleQuestions.forEach(question => {
+        let statusClass = '';
+        let statusText = '';
+        
+        switch(question.status) {
+          case 'pending':
+            statusClass = 'pending';
+            statusText = '待审核';
+            break;
+          case 'approved':
+            statusClass = 'approved';
+            statusText = '已通过';
+            break;
+          case 'rejected':
+            statusClass = 'rejected';
+            statusText = '已拒绝';
+            break;
+        }
+        
+        html += `
+          <div class="review-item" data-status="${question.status}" data-subject="${question.subject}">
+            <div class="review-item-header">
+              <div class="review-item-title">
+                ${question.title}
+                <span class="review-badge ${statusClass}">${statusText}</span>
+              </div>
+              <div class="review-item-meta">
+                来源: ${question.source} | ID: ${question.id} | 提交时间: ${question.time}
+              </div>
+            </div>
+            
+            <div class="review-item-content">
+              <div class="question-preview">
+                <div class="question-card">
+                  <div class="question-header">
+                    <div class="question-type">${question.type}</div>
+                    <div class="question-number">${question.subject}${question.level}</div>
+                  </div>
+                  
+                  <div class="question-stem">
+                    ${question.content.stem}
+                  </div>
+                  
+                  ${question.content.options ? `
+                  <ul class="question-options">
+                    ${question.content.options.map(option => `
+                      <li class="question-option ${option.isCorrect ? 'correct-option' : ''}">
+                        <div class="question-option-letter">${option.letter}</div>
+                        <div>${option.text}</div>
+                      </li>
+                    `).join('')}
+                  </ul>
+                  ` : ''}
+                  
+                  <div class="answer-tabs">
+                    <div class="answer-tab active">答案与解析</div>
+                  </div>
+                  <div class="answer-content">
+                    <div class="answer-analysis">
+                      ${question.content.options ? `
+                      <p><strong>正确答案：</strong>${question.content.options.find(opt => opt.isCorrect).letter} (${question.content.options.find(opt => opt.isCorrect).text})</p>
+                      ` : 
+                      question.content.answer ? `<p><strong>正确答案：</strong>${question.content.answer}</p>` : ''}
+                      <p><strong>解析：</strong>${question.content.explanation}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="review-item-footer">
+              <button class="btn btn-outline btn-sm edit-btn">
+                <i class="ri-edit-line" style="margin-right: 0.375rem;"></i>
+                编辑
+              </button>
+              ${question.status === 'pending' ? `
+              <button class="btn btn-success btn-sm approve-btn" data-id="${question.id}">
+                <i class="ri-check-line" style="margin-right: 0.375rem;"></i>
+                通过
+              </button>
+              <button class="btn btn-danger btn-sm reject-btn" data-id="${question.id}">
+                <i class="ri-close-line" style="margin-right: 0.375rem;"></i>
+                拒绝
+              </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      });
+      
+      // 添加到页面
+      reviewList.innerHTML = html;
+      
+      // 绑定按钮事件
+      bindItemEvents();
+      
+      // 初始化计数
+      updateFilterCounts();
+    }
+    
+    // 更新筛选计数
+    function updateFilterCounts() {
+      const items = document.querySelectorAll('.review-item');
+      let countAll = items.length;
+      let countPending = document.querySelectorAll('.review-item[data-status="pending"]').length;
+      let countApproved = document.querySelectorAll('.review-item[data-status="approved"]').length;
+      let countRejected = document.querySelectorAll('.review-item[data-status="rejected"]').length;
+      
+      document.getElementById('count-all').textContent = countAll;
+      document.getElementById('count-pending').textContent = countPending;
+      document.getElementById('count-approved').textContent = countApproved;
+      document.getElementById('count-rejected').textContent = countRejected;
+    }
+    
+    // 绑定题目项事件
+    function bindItemEvents() {
+      const approveButtons = document.querySelectorAll('.approve-btn');
+      const rejectButtons = document.querySelectorAll('.reject-btn');
+      const editButtons = document.querySelectorAll('.edit-btn');
+      
+      approveButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const id = this.getAttribute('data-id');
+          const item = this.closest('.review-item');
+          const badge = item.querySelector('.review-badge');
+          
+          badge.textContent = '已通过';
+          badge.classList.remove('pending');
+          badge.classList.add('approved');
+          
+          item.setAttribute('data-status', 'approved');
+          
+          // 移除通过和拒绝按钮
+          this.nextElementSibling.remove();
+          this.remove();
+          
+          // 更新计数
+          updateFilterCounts();
+          
+          // 重新应用筛选
+          applyFilters();
+          
+          showToast(`已通过题目: ${id}`);
+        });
+      });
+      
+      rejectButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const id = this.getAttribute('data-id');
+          const item = this.closest('.review-item');
+          const badge = item.querySelector('.review-badge');
+          
+          badge.textContent = '已拒绝';
+          badge.classList.remove('pending');
+          badge.classList.add('rejected');
+          
+          item.setAttribute('data-status', 'rejected');
+          
+          // 移除通过和拒绝按钮
+          this.previousElementSibling.remove();
+          this.remove();
+          
+          // 更新计数
+          updateFilterCounts();
+          
+          // 重新应用筛选
+          applyFilters();
+          
+          showToast(`已拒绝题目: ${id}`);
+        });
+      });
+      
+      editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const title = this.closest('.review-item').querySelector('.review-item-title').textContent.trim().split('\n')[0];
+          showToast(`正在编辑: ${title}`);
+        });
+      });
+    }
+  </script>
+</body>
+</html> 

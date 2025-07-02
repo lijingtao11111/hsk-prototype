@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - 系统设置</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #eef2ff;
+      --primary-dark: #4338ca;
+      --secondary: #6b7280;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --background: #f9fafb;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --border-radius: 0.5rem;
+      --transition: all 0.2s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--background); color: var(--text-primary); display: flex; min-height: 100vh; }
+    .sidebar { width: 250px; background-color: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 10; }
+    .sidebar-header { padding: 1.5rem; display: flex; align-items: center; border-bottom: 1px solid var(--border); }
+    .sidebar-logo { width: 2.5rem; height: 2.5rem; border-radius: 8px; background-color: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.25rem; margin-right: 0.75rem; }
+    .sidebar-title { font-weight: 600; font-size: 1.125rem; }
+    .sidebar-menu { flex: 1; padding: 1.5rem 0; overflow-y: auto; }
+    .sidebar-section { margin-bottom: 1.5rem; }
+    .sidebar-section-title { padding: 0 1.5rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.75rem; }
+    .sidebar-link { display: flex; align-items: center; padding: 0.75rem 1.5rem; color: var(--text-primary); text-decoration: none; font-weight: 500; transition: all 0.2s; }
+    .sidebar-link:hover { background-color: var(--primary-light); }
+    .sidebar-link.active { background-color: var(--primary-light); color: var(--primary); border-left: 3px solid var(--primary); }
+    .sidebar-icon { margin-right: 0.75rem; font-size: 1.25rem; }
+    .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; }
+    .sidebar-footer-avatar { width: 2.25rem; height: 2.25rem; border-radius: 8px; background-color: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 600; margin-right: 0.75rem; }
+    .main-content { flex: 1; margin-left: 250px; padding: 1.5rem; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+    .page-title { font-size: 1.5rem; font-weight: 600; }
+    .card { background-color: white; border-radius: var(--border-radius); box-shadow: var(--card-shadow); border: 1px solid var(--border); overflow: hidden; margin-bottom: 1.5rem; }
+    .card-header { padding: 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background-color: #f9fafb; }
+    .card-title { font-weight: 600; font-size: 1rem; }
+    .card-body { padding: 1.25rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label { display: block; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .form-input, .form-select { width: 100%; padding: 0.625rem 0.75rem; border: 1px solid var(--border); border-radius: 0.375rem; font-size: 0.875rem; line-height: 1.5; transition: var(--transition); }
+    .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+    .form-row { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .form-col { flex: 1; min-width: 220px; }
+    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(20px); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1.5rem; border-radius: 0.375rem; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: var(--transition); border: none; }
+    .btn-primary { background-color: var(--primary); color: white; }
+    .btn-primary:hover { background-color: var(--primary-dark); }
+    .btn-outline { background-color: white; border: 1px solid var(--border); color: var(--text-secondary); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-icon { margin-right: 0.375rem; }
+    .setting-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .success-tip { color: var(--success); font-size: 1rem; margin-top: 1rem; display: none; }
+    @media (max-width: 900px) { .form-row { flex-direction: column; gap: 0.5rem; } }
+    @media (max-width: 768px) { .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; } .sidebar.show { transform: translateX(0); } .main-content { margin-left: 0; } .topbar { flex-wrap: wrap; gap: 1rem; } }
+  </style>
+</head>
+<body>
+  <!-- 侧边栏 -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Z</div>
+      <div class="sidebar-title">浙财智能考试系统</div>
+    </div>
+    <div class="sidebar-menu">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">系统管理</div>
+        <a href="index.html" class="sidebar-link">
+          <i class="ri-dashboard-line sidebar-icon"></i>
+          <span>系统概览</span>
+        </a>
+        <a href="user-management.html" class="sidebar-link">
+          <i class="ri-user-settings-line sidebar-icon"></i>
+          <span>用户管理</span>
+        </a>
+        <a href="subject-management.html" class="sidebar-link">
+          <i class="ri-book-open-line sidebar-icon"></i>
+          <span>学科管理</span>
+        </a>
+        <a href="question-bank.html" class="sidebar-link">
+          <i class="ri-question-answer-line sidebar-icon"></i>
+          <span>题库管理</span>
+        </a>
+        <a href="system-settings.html" class="sidebar-link active">
+          <i class="ri-settings-line sidebar-icon"></i>
+          <span>系统设置</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">账户</div>
+        <a href="login.html" class="sidebar-link">
+          <i class="ri-logout-box-line sidebar-icon"></i>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-avatar">管</div>
+      <div>
+        <div style="font-weight: 500;">系统管理员</div>
+        <div style="font-size: 0.75rem; color: #6b7280;">超级管理员</div>
+      </div>
+    </div>
+  </div>
+  <!-- 主内容区域 -->
+  <div class="main-content">
+    <div class="topbar">
+      <h1 class="page-title">系统设置</h1>
+    </div>
+    <!-- 系统基础信息设置卡片 -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">基础信息</h2>
+      </div>
+      <div class="card-body">
+        <form id="settingsForm">
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label" for="systemName">系统名称</label>
+                <input class="form-input" id="systemName" name="systemName" type="text" value="浙江财经大学智能考试系统">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="themeColor">主题色</label>
+                <input class="form-input" id="themeColor" name="themeColor" type="color" value="#4f46e5" style="width: 60px; height: 36px; padding: 0;">
+              </div>
+            </div>
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label" for="logoUpload">系统Logo</label>
+                <input class="form-input" id="logoUpload" name="logoUpload" type="file" accept="image/*">
+                <div id="logoPreview" style="margin-top:0.5rem;"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- 登录方式设置卡片 -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">登录方式</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-col">
+            <label class="form-label">企业微信登录</label>
+            <label class="switch">
+              <input type="checkbox" id="wechatLogin" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="form-col">
+            <label class="form-label">账号密码登录</label>
+            <label class="switch">
+              <input type="checkbox" id="accountLogin" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 通知设置卡片 -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">通知设置</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-col">
+            <label class="form-label">邮件通知</label>
+            <label class="switch">
+              <input type="checkbox" id="emailNotify" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="form-col">
+            <label class="form-label">短信通知</label>
+            <label class="switch">
+              <input type="checkbox" id="smsNotify">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 数据备份与恢复卡片 -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">数据管理</h2>
+      </div>
+      <div class="card-body">
+        <div class="setting-actions">
+          <button class="btn btn-outline" id="backupBtn"><i class="ri-database-2-line btn-icon"></i>数据备份</button>
+          <button class="btn btn-outline" id="restoreBtn"><i class="ri-upload-cloud-2-line btn-icon"></i>数据恢复</button>
+        </div>
+      </div>
+    </div>
+    <!-- 保存按钮 -->
+    <div style="text-align:right;">
+      <button class="btn btn-primary" id="saveBtn"><i class="ri-save-line btn-icon"></i>保存设置</button>
+      <div class="success-tip" id="successTip">设置已保存！</div>
+    </div>
+  </div>
+  <script>
+    // Logo预览
+    document.getElementById('logoUpload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('logoPreview');
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          preview.innerHTML = `<img src="${evt.target.result}" alt="Logo预览" style="max-width:100px;max-height:60px;border-radius:8px;box-shadow:0 1px 3px #0001;">`;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.innerHTML = '';
+      }
+    });
+    // 保存按钮交互
+    document.getElementById('saveBtn').addEventListener('click', function() {
+      document.getElementById('successTip').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('successTip').style.display = 'none';
+      }, 2000);
+    });
+    // 数据备份与恢复交互
+    document.getElementById('backupBtn').addEventListener('click', function() {
+      alert('数据备份功能暂未开放，敬请期待！');
+    });
+    document.getElementById('restoreBtn').addEventListener('click', function() {
+      alert('数据恢复功能暂未开放，敬请期待！');
+    });
+  </script>
+</body>
+</html>

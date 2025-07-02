@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - 练习结果</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css">
+  <style>
+    .result-card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    
+    .result-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .score-circle {
+      width: 10rem;
+      height: 10rem;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem auto;
+    }
+    
+    .score-number {
+      font-size: 3rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+    
+    .score-text {
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+    
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    
+    .stat-box {
+      background-color: #f9fafb;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+    
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    .result-action {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    
+    .wrong-question {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .wrong-question:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .knowledge-tag {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background-color: #e1e7ff;
+      color: var(--primary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .ai-analysis {
+      background-color: #f9fafb;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      margin-top: 1rem;
+      position: relative;
+    }
+    
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.5rem;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      position: absolute;
+      top: -0.75rem;
+      left: 1rem;
+    }
+    
+    .ai-badge i {
+      margin-right: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="home.html" class="navbar-brand">智能考试系统</a>
+      
+      <ul class="navbar-menu">
+        <li class="navbar-item"><a href="home.html" class="navbar-link">首页</a></li>
+        <li class="navbar-item"><a href="subjects.html" class="navbar-link">学科选择</a></li>
+        <li class="navbar-item"><a href="wrong-questions.html" class="navbar-link">错题本</a></li>
+        <li class="navbar-item"><a href="profile.html" class="navbar-link">个人中心</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <div class="container" style="padding: 2rem 0 5rem 0;">
+    <!-- 结果总览 -->
+    <div class="result-card">
+      <div class="result-header">
+        <div class="score-circle">
+          <div class="score-number">85</div>
+          <div class="score-text">分</div>
+        </div>
+        
+        <h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">练习完成！</h1>
+        <p style="color: var(--text-secondary);">HSK四级 - 2023年6月真题卷</p>
+      </div>
+      
+      <div class="result-stats">
+        <div class="stat-box">
+          <div class="stat-value">17/20</div>
+          <div class="stat-label">答对题目</div>
+        </div>
+        
+        <div class="stat-box">
+          <div class="stat-value">85%</div>
+          <div class="stat-label">正确率</div>
+        </div>
+        
+        <div class="stat-box">
+          <div class="stat-value">38分钟</div>
+          <div class="stat-label">耗时</div>
+        </div>
+        
+        <div class="stat-box">
+          <div class="stat-value">优秀</div>
+          <div class="stat-label">评价</div>
+        </div>
+      </div>
+      
+      <div class="result-action">
+        <a href="practice.html?subject=hsk4&mode=review" class="btn btn-outline" style="margin-right: 1rem;">
+          <i class="ri-file-list-3-line" style="margin-right: 0.5rem;"></i>
+          查看详情
+        </a>
+        
+        <a href="subject-detail.html?subject=hsk4" class="btn btn-primary">
+          <i class="ri-arrow-go-back-line" style="margin-right: 0.5rem;"></i>
+          返回学科
+        </a>
+      </div>
+    </div>
+    
+    <!-- 错题分析 -->
+    <div style="margin-top: 2rem;">
+      <h2 class="section-title">
+        <i class="ri-error-warning-line"></i>
+        <span>错题分析</span>
+      </h2>
+      
+      <div class="result-card">
+        <!-- 错题1 -->
+        <div class="wrong-question">
+          <div class="question-stem" style="margin-bottom: 0.75rem;">
+            他已经把这本书<strong>看完了</strong>，现在正在看下一本。
+          </div>
+          
+          <div style="margin-bottom: 1rem;">
+            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">你的答案：</div>
+            <div class="question-option wrong-option" style="margin-bottom: 0.5rem;">
+              <div class="question-option-letter">B</div>
+              <div>用过</div>
+            </div>
+            
+            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">正确答案：</div>
+            <div class="question-option correct-option">
+              <div class="question-option-letter">A</div>
+              <div>读过</div>
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 1rem;">
+            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">知识点：</div>
+            <div>
+              <span class="knowledge-tag">动词补语</span>
+              <span class="knowledge-tag">词语搭配</span>
+            </div>
+          </div>
+          
+          <div class="ai-analysis">
+            <div class="ai-badge">
+              <i class="ri-robot-line"></i>
+              <span>AI分析</span>
+            </div>
+            
+            <p>这道题测试的是动词与宾语的搭配关系。"看完"表示对书籍的阅读完成，应选择与"看"语义相近的"读过"。"用过"通常与工具类宾语搭配；"听过"与音频、声音类宾语搭配；"写过"表示创作行为，与"看完"语义方向不符。</p>
+          </div>
+        </div>
+        
+        <!-- 错题2 -->
+        <div class="wrong-question">
+          <div class="question-stem" style="margin-bottom: 0.75rem;">
+            下列哪些词语可以用来形容一个人很忙碌？（选择两个）
+          </div>
+          
+          <div style="margin-bottom: 1rem;">
+            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">你的答案：</div>
+            <div class="question-option correct-option" style="margin-bottom: 0.5rem;">
+              <div class="question-option-letter">A</div>
+              <div>手忙脚乱</div>
+            </div>
+            <div class="question-option wrong-option" style="margin-bottom: 0.5rem;">
+              <div class="question-option-letter">B</div>
+              <div>无忧无虑</div>
+            </div>
+            
+            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">正确答案：</div>
+            <div class="question-option correct-option" style="margin-bottom: 0.5rem;">
+              <div class="question-option-letter">A</div>
+              <div>手忙脚乱</div>
+            </div>
+            <div class="question-option correct-option">
+              <div class="question-option-letter">D</div>
+              <div>争分夺秒</div>
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 1rem;">
+            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">知识点：</div>
+            <div>
+              <span class="knowledge-tag">成语理解</span>
+              <span class="knowledge-tag">词语辨析</span>
+            </div>
+          </div>
+          
+          <div class="ai-analysis">
+            <div class="ai-badge">
+              <i class="ri-robot-line"></i>
+              <span>AI分析</span>
+            </div>
+            
+            <p>"手忙脚乱"描述的是忙碌慌张的状态；"争分夺秒"表示珍惜时间、抓紧时间，这两个成语都可以用来形容一个人很忙。而"无忧无虑"表示没有忧愁和顾虑，形容轻松愉快的状态；"悠闲自在"表示自由、舒适，两者都与"忙碌"的含义相反。</p>
+          </div>
+        </div>
+        
+        <!-- 错题3 -->
+        <div class="wrong-question">
+          <div class="question-stem" style="margin-bottom: 0.75rem;">
+            请将下面的句子补充完整：<br/>
+            我昨天在图书馆学习了 <u>三</u> 个小时，然后去 <u>食堂</u> 吃了晚饭。
+          </div>
+          
+          <div style="margin-bottom: 1rem;">
+            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">你的答案：</div>
+            <p>我昨天在图书馆学习了 <span style="color: var(--primary);">三</span> 个小时，然后去 <span style="color: var(--danger);">餐厅</span> 吃了晚饭。</p>
+            
+            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">正确答案：</div>
+            <p>我昨天在图书馆学习了 <span style="color: var(--primary);">三</span> 个小时，然后去 <span style="color: var(--primary);">食堂</span> 吃了晚饭。</p>
+          </div>
+          
+          <div style="margin-bottom: 1rem;">
+            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">知识点：</div>
+            <div>
+              <span class="knowledge-tag">词语选用</span>
+              <span class="knowledge-tag">场景词汇</span>
+            </div>
+          </div>
+          
+          <div class="ai-analysis">
+            <div class="ai-badge">
+              <i class="ri-robot-line"></i>
+              <span>AI分析</span>
+            </div>
+            
+            <p>"餐厅"和"食堂"都可以表示吃饭的场所，但在中国大学语境下，通常使用"食堂"指代学校内的就餐场所，而"餐厅"多指社会上的商业性场所。根据上下文是学校场景，应该选择"食堂"更为恰当。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- AI学习推荐 -->
+    <div style="margin-top: 2rem;">
+      <h2 class="section-title">
+        <i class="ri-robot-line"></i>
+        <span>AI学习建议</span>
+      </h2>
+      
+      <div class="result-card">
+        <div style="margin-bottom: 2rem;">
+          <p style="margin-bottom: 1rem;">
+            根据你的练习情况，AI分析出你可能在以下知识点方面需要加强：
+          </p>
+          
+          <ul style="list-style: none; padding: 0;">
+            <li style="display: flex; align-items: center; margin-bottom: 1rem;">
+              <i class="ri-checkbox-circle-line" style="color: var(--primary); margin-right: 0.5rem;"></i>
+              <span><strong>词语搭配</strong>：动词与宾语的正确搭配关系</span>
+            </li>
+            <li style="display: flex; align-items: center; margin-bottom: 1rem;">
+              <i class="ri-checkbox-circle-line" style="color: var(--primary); margin-right: 0.5rem;"></i>
+              <span><strong>成语理解</strong>：更准确地把握成语含义和使用场景</span>
+            </li>
+            <li style="display: flex; align-items: center; margin-bottom: 1rem;">
+              <i class="ri-checkbox-circle-line" style="color: var(--primary); margin-right: 0.5rem;"></i>
+              <span><strong>场景词汇</strong>：特定场合下的词语选择</span>
+            </li>
+          </ul>
+        </div>
+        
+        <h3 style="font-weight: 600; margin-bottom: 1rem;">推荐学习资源</h3>
+        
+        <div class="row" style="margin-bottom: 1.5rem;">
+          <div class="col">
+            <a href="#" class="practice-card">
+              <div class="practice-card-inner">
+                <div class="practice-icon">
+                  <i class="ri-book-open-line"></i>
+                </div>
+                
+                <div class="practice-content">
+                  <h3 style="font-weight: 600; margin-bottom: 0.25rem;">HSK四级词语搭配专项练习</h3>
+                  <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                    50道精选题目，帮你掌握常见动词宾语搭配
+                  </p>
+                </div>
+                
+                <i class="ri-arrow-right-s-line" style="color: var(--text-secondary); font-size: 1.5rem; margin-left: 1rem;"></i>
+              </div>
+            </a>
+          </div>
+          
+          <div class="col">
+            <a href="#" class="practice-card">
+              <div class="practice-card-inner">
+                <div class="practice-icon">
+                  <i class="ri-book-mark-line"></i>
+                </div>
+                
+                <div class="practice-content">
+                  <h3 style="font-weight: 600; margin-bottom: 0.25rem;">HSK四级常用成语100例</h3>
+                  <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                    HSK常考成语详解及练习
+                  </p>
+                </div>
+                
+                <i class="ri-arrow-right-s-line" style="color: var(--text-secondary); font-size: 1.5rem; margin-left: 1rem;"></i>
+              </div>
+            </a>
+          </div>
+        </div>
+        
+        <div class="text-center">
+          <a href="practice.html?subject=hsk4&mode=recommend" class="btn btn-primary">
+            开始针对性练习
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 移动端底部导航 -->
+  <nav class="mobile-navbar">
+    <ul class="mobile-navbar-menu">
+      <li class="mobile-navbar-item">
+        <a href="home.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-home-4-line"></i>
+          <span>首页</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="subjects.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-book-open-line"></i>
+          <span>学科</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="practice.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-edit-line"></i>
+          <span>练习</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="wrong-questions.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-error-warning-line"></i>
+          <span>错题</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="profile.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-user-line"></i>
+          <span>我的</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+  <script src="js/app.js"></script>
+</body>
+</html> 

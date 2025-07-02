@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - HSK四级练习</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css">
+  <style>
+    /* 练习页面特定样式 */
+    .practice-header {
+      background-color: var(--bg-white);
+      box-shadow: var(--shadow);
+      padding: var(--spacing-4) 0;
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky);
+      border-bottom: 1px solid var(--border-light);
+    }
+    
+    .practice-content {
+      padding: var(--spacing-8) 0 var(--spacing-16) 0;
+    }
+    
+    .practice-footer {
+      background-color: var(--bg-white);
+      box-shadow: var(--shadow-lg);
+      padding: var(--spacing-4) 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: var(--z-sticky);
+      border-top: 1px solid var(--border-light);
+    }
+    
+    .question-navigation {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-6);
+      overflow-x: auto;
+      padding-bottom: var(--spacing-2);
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary) var(--gray-200);
+    }
+    
+    .question-navigation::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    .question-navigation::-webkit-scrollbar-track {
+      background: var(--gray-200);
+      border-radius: var(--radius-full);
+    }
+    
+    .question-navigation::-webkit-scrollbar-thumb {
+      background-color: var(--primary);
+      border-radius: var(--radius-full);
+    }
+    
+    .question-nav-item {
+      min-width: 2.5rem;
+      height: 2.5rem;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: var(--spacing-2);
+      background-color: var(--bg-white);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all var(--transition);
+      flex-shrink: 0;
+    }
+    
+    .question-nav-item:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .question-nav-item.active {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+    
+    .question-nav-item.answered {
+      background-color: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    .nav-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-2) var(--spacing-4);
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+      gap: var(--spacing-2);
+    }
+    
+    .nav-button.primary {
+      background-color: var(--primary);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .nav-button.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .nav-button.outline {
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+    
+    .nav-button.outline:hover {
+      background-color: var(--gray-100);
+      border-color: var(--gray-400);
+    }
+    
+    .nav-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    
+    .timer-container {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--spacing-2) var(--spacing-4);
+      background-color: var(--primary-light);
+      border-radius: var(--radius-full);
+      font-size: 0.875rem;
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    .timer-container i {
+      margin-right: var(--spacing-2);
+    }
+    
+    .practice-header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .practice-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: var(--spacing-1);
+    }
+    
+    .practice-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    @media (max-width: 768px) {
+      .practice-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .timer-container {
+        margin-top: var(--spacing-2);
+      }
+      
+      .practice-footer-content {
+        flex-direction: column;
+        gap: var(--spacing-3);
+      }
+      
+      .practice-footer-content .nav-button {
+        width: 100%;
+      }
+      
+      .practice-footer {
+        padding: var(--spacing-3) 0;
+      }
+    }
+    
+    .fill-blank-input {
+      width: 100%;
+      padding: var(--spacing-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: var(--spacing-3);
+      transition: all var(--transition);
+    }
+    
+    .fill-blank-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+      outline: none;
+    }
+    
+    .practice-footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .practice-progress {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    .practice-actions {
+      display: flex;
+      gap: var(--spacing-2);
+    }
+  </style>
+</head>
+<body>
+  <!-- 练习头部 -->
+  <header class="practice-header">
+    <div class="container">
+      <div class="practice-header-content">
+        <div>
+          <h1 class="practice-title">HSK四级真题练习</h1>
+          <p class="practice-subtitle">2023年6月真题卷 - 共10题</p>
+        </div>
+        
+        <div class="timer-container" id="exam-timer" data-time-left="3600">
+          <i class="ri-time-line"></i>
+          <span>59:59</span>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <div class="container practice-content">
+    <!-- 题目导航 -->
+    <div class="question-navigation" id="question-navigation">
+      <div class="question-nav-item active" data-question="1">1</div>
+      <div class="question-nav-item" data-question="2">2</div>
+      <div class="question-nav-item" data-question="3">3</div>
+      <div class="question-nav-item" data-question="4">4</div>
+      <div class="question-nav-item" data-question="5">5</div>
+      <div class="question-nav-item" data-question="6">6</div>
+      <div class="question-nav-item" data-question="7">7</div>
+      <div class="question-nav-item" data-question="8">8</div>
+      <div class="question-nav-item" data-question="9">9</div>
+      <div class="question-nav-item" data-question="10">10</div>
+    </div>
+    
+    <!-- 题目容器 -->
+    <form id="submit-exam-form">
+      <!-- 单选题 1 -->
+      <div class="question-card fade-in" id="question-1" data-type="single_choice">
+        <div class="question-header">
+          <div class="question-type">单选题</div>
+          <div class="question-number">第 1 题 / 共 10 题</div>
+        </div>
+        
+        <div class="question-stem">
+          他已经把这本书<strong>看完了</strong>，现在正在看下一本。
+        </div>
+        
+        <ul class="question-options">
+          <li class="question-option" data-value="A">
+            <div class="question-option-letter">A</div>
+            <div>读过</div>
+          </li>
+          <li class="question-option" data-value="B">
+            <div class="question-option-letter">B</div>
+            <div>用过</div>
+          </li>
+          <li class="question-option" data-value="C">
+            <div class="question-option-letter">C</div>
+            <div>听过</div>
+          </li>
+          <li class="question-option" data-value="D">
+            <div class="question-option-letter">D</div>
+            <div>写过</div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- 单选题 2 -->
+      <div class="question-card fade-in" id="question-2" data-type="single_choice" style="display: none;">
+        <div class="question-header">
+          <div class="question-type">单选题</div>
+          <div class="question-number">第 2 题 / 共 10 题</div>
+        </div>
+        
+        <div class="question-stem">
+          这个问题很<strong>复杂</strong>，我们需要更多时间来解决。
+        </div>
+        
+        <ul class="question-options">
+          <li class="question-option" data-value="A">
+            <div class="question-option-letter">A</div>
+            <div>简单</div>
+          </li>
+          <li class="question-option" data-value="B">
+            <div class="question-option-letter">B</div>
+            <div>困难</div>
+          </li>
+          <li class="question-option" data-value="C">
+            <div class="question-option-letter">C</div>
+            <div>清楚</div>
+          </li>
+          <li class="question-option" data-value="D">
+            <div class="question-option-letter">D</div>
+            <div>明白</div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- 多选题 3 -->
+      <div class="question-card fade-in" id="question-3" data-type="multiple_choice" style="display: none;">
+        <div class="question-header">
+          <div class="question-type">多选题</div>
+          <div class="question-number">第 3 题 / 共 10 题</div>
+        </div>
+        
+        <div class="question-stem">
+          下列哪些词语可以用来形容一个人很忙碌？（选择两个）
+        </div>
+        
+        <ul class="question-options">
+          <li class="question-option" data-value="A">
+            <div class="question-option-letter">A</div>
+            <div>手忙脚乱</div>
+          </li>
+          <li class="question-option" data-value="B">
+            <div class="question-option-letter">B</div>
+            <div>无忧无虑</div>
+          </li>
+          <li class="question-option" data-value="C">
+            <div class="question-option-letter">C</div>
+            <div>悠闲自在</div>
+          </li>
+          <li class="question-option" data-value="D">
+            <div class="question-option-letter">D</div>
+            <div>争分夺秒</div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- 单选题 4 -->
+      <div class="question-card fade-in" id="question-4" data-type="single_choice" style="display: none;">
+        <div class="question-header">
+          <div class="question-type">单选题</div>
+          <div class="question-number">第 4 题 / 共 10 题</div>
+        </div>
+        
+        <div class="question-stem">
+          他<strong>突然</strong>想起来今天是朋友的生日。
+        </div>
+        
+        <ul class="question-options">
+          <li class="question-option" data-value="A">
+            <div class="question-option-letter">A</div>
+            <div>慢慢地</div>
+          </li>
+          <li class="question-option" data-value="B">
+            <div class="question-option-letter">B</div>
+            <div>一下子</div>
+          </li>
+          <li class="question-option" data-value="C">
+            <div class="question-option-letter">C</div>
+            <div>经常</div>
+          </li>
+          <li class="question-option" data-value="D">
+            <div class="question-option-letter">D</div>
+            <div>总是</div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- 填空题 5 -->
+      <div class="question-card fade-in" id="question-5" data-type="fill_blank" style="display: none;">
+        <div class="question-header">
+          <div class="question-type">填空题</div>
+          <div class="question-number">第 5 题 / 共 10 题</div>
+        </div>
+        
+        <div class="question-stem">
+          请将下面的句子补充完整：<br>
+          春节是中国最重要的________，家人团聚在一起吃________，看春晚。
+        </div>
+        
+        <div style="margin-top: var(--spacing-4);">
+          <input type="text" class="fill-blank-input" placeholder="请输入第一个空的答案">
+          <input type="text" class="fill-blank-input" placeholder="请输入第二个空的答案">
+        </div>
+      </div>
+      
+      <!-- 单选题 6 -->
+      <div class="question-card fade-in" id="question-6" data-type="single_choice" style="display: none;">
+        <div class="question-header">
+          <div class="question-type">单选题</div>
+          <div class="question-number">第 6 题 / 共 10 题</div>
+        </div>
+        
+        <div class="question-stem">
+          这种茶很<strong>香</strong>，你可以尝尝。
+        </div>
+        
+        <ul class="question-options">
+          <li class="question-option" data-value="A">
+            <div class="question-option-letter">A</div>
+            <div>苦</div>
+          </li>
+          <li class="question-option" data-value="B">
+            <div class="question-option-letter">B</div>
+            <div>甜</div>
+          </li>
+          <li class="question-option" data-value="C">
+            <div class="question-option-letter">C</div>
+            <div>有味道</div>
+          </li>
+          <li class="question-option" data-value="D">
+            <div class="question-option-letter">D</div>
+            <div>没味道</div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- 单选题 7 -->
+      <div class="question-card fade-in" id="question-7" data-type="single_choice" style="display: none;">
+        <div class="question-header">
+          <div class="question-type">单选题</div>
+          <div class="question-number">第 7 题 / 共 10 题</div>
+        </div>
+        
+        <div class="question-stem">
+          这个城市的交通很<strong>便利</strong>，到处都可以坐公交车。
+        </div>
+        
+        <ul class="question-options">
+          <li class="question-option" data-value="A">
+            <div class="question-option-letter">A</div>
+            <div>方便</div>
+          </li>
+          <li class="question-option" data-value="B">
+            <div class="question-option-letter">B</div>
+            <div>拥挤</div>
+          </li>
+          <li class="question-option" data-value="C">
+            <div class="question-option-letter">C</div>
+            <div>复杂</div>
+          </li>
+          <li class="question-option" data-value="D">
+            <div class="question-option-letter">D</div>
+            <div>危险</div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- 多选题 8 -->
+      <div class="question-card fade-in" id="question-8" data-type="multiple_choice" style="display: none;">
+        <div class="question-header">
+          <div class="question-type">多选题</div>
+          <div class="question-number">第 8 题 / 共 10 题</div>
+        </div>
+        
+        <div class="question-stem">
+          下列哪些词语可以用来形容天气很热？（选择两个）
+        </div>
+        
+        <ul class="question-options">
+          <li class="question-option" data-value="A">
+            <div class="question-option-letter">A</div>
+            <div>寒冷</div>
+          </li>
+          <li class="question-option" data-value="B">
+            <div class="question-option-letter">B</div>
+            <div>炎热</div>
+          </li>
+          <li class="question-option" data-value="C">
+            <div class="question-option-letter">C</div>
+            <div>酷暑</div>
+          </li>
+          <li class="question-option" data-value="D">
+            <div class="question-option-letter">D</div>
+            <div>凉爽</div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- 填空题 9 -->
+      <div class="question-card fade-in" id="question-9" data-type="fill_blank" style="display: none;">
+        <div class="question-header">
+          <div class="question-type">填空题</div>
+          <div class="question-number">第 9 题 / 共 10 题</div>
+        </div>
+        
+        <div class="question-stem">
+          请将下面的句子补充完整：<br>
+          学习汉语需要多________，多________，这样才能提高得快。
+        </div>
+        
+        <div style="margin-top: var(--spacing-4);">
+          <input type="text" class="fill-blank-input" placeholder="请输入第一个空的答案">
+          <input type="text" class="fill-blank-input" placeholder="请输入第二个空的答案">
+        </div>
+      </div>
+      
+      <!-- 单选题 10 -->
+      <div class="question-card fade-in" id="question-10" data-type="single_choice" style="display: none;">
+        <div class="question-header">
+          <div class="question-type">单选题</div>
+          <div class="question-number">第 10 题 / 共 10 题</div>
+        </div>
+        
+        <div class="question-stem">
+          他<strong>认真</strong>地完成了所有作业。
+        </div>
+        
+        <ul class="question-options">
+          <li class="question-option" data-value="A">
+            <div class="question-option-letter">A</div>
+            <div>仔细</div>
+          </li>
+          <li class="question-option" data-value="B">
+            <div class="question-option-letter">B</div>
+            <div>随便</div>
+          </li>
+          <li class="question-option" data-value="C">
+            <div class="question-option-letter">C</div>
+            <div>马虎</div>
+          </li>
+          <li class="question-option" data-value="D">
+            <div class="question-option-letter">D</div>
+            <div>粗心</div>
+          </li>
+        </ul>
+      </div>
+    </form>
+  </div>
+  
+  <!-- 练习底部 -->
+  <footer class="practice-footer">
+    <div class="container">
+      <div class="practice-footer-content">
+        <div class="practice-progress">
+          <div class="progress-container" style="width: 120px;">
+            <div class="progress-bar" id="progress-bar" style="width: 10%;"></div>
+          </div>
+          <span id="progress-text">1/10 题</span>
+        </div>
+        
+        <div class="practice-actions">
+          <button class="nav-button outline" id="prev-button" disabled>
+            <i class="ri-arrow-left-line"></i>
+            上一题
+          </button>
+          <button class="nav-button primary" id="next-button">
+            下一题
+            <i class="ri-arrow-right-line"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 当前题目索引
+      let currentQuestionIndex = 0;
+      // 题目总数
+      const totalQuestions = 10;
+      // 用户答案
+      const userAnswers = Array(totalQuestions).fill(null);
+      
+      // 获取所有题目元素
+      const questions = document.querySelectorAll('.question-card');
+      // 获取题目导航元素
+      const navItems = document.querySelectorAll('.question-nav-item');
+      // 获取上一题、下一题按钮
+      const prevButton = document.getElementById('prev-button');
+      const nextButton = document.getElementById('next-button');
+      // 获取进度条和进度文本
+      const progressBar = document.getElementById('progress-bar');
+      const progressText = document.getElementById('progress-text');
+      
+      // 显示指定索引的题目
+      function showQuestion(index) {
+        // 隐藏所有题目
+        questions.forEach(q => q.style.display = 'none');
+        // 显示当前题目
+        questions[index].style.display = 'block';
+        
+        // 更新导航状态
+        navItems.forEach((nav, i) => {
+          nav.classList.remove('active');
+          if (i === index) {
+            nav.classList.add('active');
+          }
+        });
+        
+        // 更新按钮状态
+        prevButton.disabled = index === 0;
+        nextButton.textContent = index === totalQuestions - 1 ? '提交' : '下一题';
+        nextButton.innerHTML = index === totalQuestions - 1 ? 
+          '提交' : 
+          '下一题 <i class="ri-arrow-right-line"></i>';
+        
+        // 更新进度
+        currentQuestionIndex = index;
+        updateProgress();
+      }
+      
+      // 更新进度条和文本
+      function updateProgress() {
+        const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `${currentQuestionIndex + 1}/${totalQuestions} 题`;
+      }
+      
+      // 记录用户答案
+      function recordAnswer(questionIndex, answer) {
+        userAnswers[questionIndex] = answer;
+        navItems[questionIndex].classList.add('answered');
+      }
+      
+      // 选项点击事件
+      document.querySelectorAll('.question-option').forEach(option => {
+        option.addEventListener('click', function() {
+          const questionCard = this.closest('.question-card');
+          const questionType = questionCard.dataset.type;
+          const questionIndex = parseInt(questionCard.id.split('-')[1]) - 1;
+          
+          if (questionType === 'single_choice') {
+            // 单选题逻辑
+            questionCard.querySelectorAll('.question-option').forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            recordAnswer(questionIndex, this.dataset.value);
+          } else if (questionType === 'multiple_choice') {
+            // 多选题逻辑
+            this.classList.toggle('selected');
+            
+            // 收集所有选中的选项
+            const selectedOptions = Array.from(questionCard.querySelectorAll('.question-option.selected'))
+              .map(opt => opt.dataset.value);
+            
+            if (selectedOptions.length > 0) {
+              recordAnswer(questionIndex, selectedOptions);
+            }
+          }
+        });
+      });
+      
+      // 填空题输入事件
+      document.querySelectorAll('.fill-blank-input').forEach(input => {
+        input.addEventListener('input', function() {
+          const questionCard = this.closest('.question-card');
+          const questionIndex = parseInt(questionCard.id.split('-')[1]) - 1;
+          const inputs = questionCard.querySelectorAll('.fill-blank-input');
+          
+          // 收集所有填空的答案
+          const answers = Array.from(inputs).map(inp => inp.value.trim());
+          
+          // 如果至少有一个答案不为空，则记录
+          if (answers.some(answer => answer !== '')) {
+            recordAnswer(questionIndex, answers);
+          }
+        });
+      });
+      
+      // 题目导航点击事件
+      navItems.forEach((item, index) => {
+        item.addEventListener('click', function() {
+          showQuestion(index);
+        });
+      });
+      
+      // 上一题按钮点击事件
+      prevButton.addEventListener('click', function() {
+        if (currentQuestionIndex > 0) {
+          showQuestion(currentQuestionIndex - 1);
+        }
+      });
+      
+      // 下一题按钮点击事件
+      nextButton.addEventListener('click', function() {
+        if (currentQuestionIndex < totalQuestions - 1) {
+          showQuestion(currentQuestionIndex + 1);
+        } else {
+          // 最后一题，提交答案
+          submitAnswers();
+        }
+      });
+      
+      // 提交答案
+      function submitAnswers() {
+        // 计算答对题目数
+        const correctCount = userAnswers.filter(answer => answer !== null).length;
+        
+        // 显示结果
+        alert(`练习完成！\n您完成了 ${correctCount} 道题目，即将跳转到结果页面。`);
+        
+        // 跳转到结果页面
+        window.location.href = 'practice-result.html';
+      }
+      
+      // 计时器逻辑
+      const timerElement = document.getElementById('exam-timer');
+      if (timerElement) {
+        let timeLeft = parseInt(timerElement.dataset.timeLeft);
+        
+        const updateTimer = () => {
+          const minutes = Math.floor(timeLeft / 60);
+          const seconds = timeLeft % 60;
+          
+          timerElement.querySelector('span').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          
+          if (timeLeft > 0) {
+            timeLeft--;
+            setTimeout(updateTimer, 1000);
+          } else {
+            alert('考试时间到！');
+            submitAnswers();
+          }
+        };
+        
+        updateTimer();
+      }
+      
+      // 初始化显示第一题
+      showQuestion(0);
+    });
+  </script>
+</body>
+</html> 

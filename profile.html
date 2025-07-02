@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - 个人中心</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css">
+  <style>
+    .profile-header {
+      background-color: #4f46e5;
+      color: white;
+      padding: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .profile-pattern {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+    
+    .profile-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+    }
+    
+    .avatar {
+      width: 6rem;
+      height: 6rem;
+      border-radius: 50%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1.5rem;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      overflow: hidden;
+    }
+    
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .user-role {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    
+    .profile-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+    
+    .profile-tab {
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    
+    .profile-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .setting-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .setting-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+    
+    .setting-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.5rem;
+      background-color: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    
+    .setting-content {
+      flex: 1;
+    }
+    
+    .setting-action {
+      margin-left: 1rem;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 3rem;
+      height: 1.5rem;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e5e7eb;
+      transition: 0.4s;
+      border-radius: 1.5rem;
+    }
+    
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 1.25rem;
+      width: 1.25rem;
+      left: 0.125rem;
+      bottom: 0.125rem;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .toggle-slider {
+      background-color: var(--primary);
+    }
+    
+    input:checked + .toggle-slider:before {
+      transform: translateX(1.5rem);
+    }
+    
+    .chart-container {
+      height: 250px;
+      margin: 1.5rem 0;
+    }
+    
+    .chart-placeholder {
+      width: 100%;
+      height: 100%;
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed var(--border);
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="home.html" class="navbar-brand">智能考试系统</a>
+      
+      <ul class="navbar-menu">
+        <li class="navbar-item"><a href="home.html" class="navbar-link">首页</a></li>
+        <li class="navbar-item"><a href="subjects.html" class="navbar-link">学科选择</a></li>
+        <li class="navbar-item"><a href="wrong-questions.html" class="navbar-link">错题本</a></li>
+        <li class="navbar-item"><a href="profile.html" class="navbar-link active">个人中心</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- 个人资料头部 -->
+  <section class="profile-header">
+    <div class="profile-pattern"></div>
+    
+    <div class="container profile-content">
+      <div class="avatar">
+        <!-- 使用占位符头像 -->
+        <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=John" alt="头像">
+      </div>
+      
+      <div>
+        <h1 style="font-size: 1.75rem; font-weight: bold; margin-bottom: 0.25rem;">李明</h1>
+        <p style="opacity: 0.9; margin-bottom: 0.5rem;">学号: 2023001001</p>
+        <span class="user-role">学生用户</span>
+      </div>
+    </div>
+  </section>
+  
+  <div class="container" style="padding: 2rem 0 5rem 0;">
+    <!-- 个人中心标签 -->
+    <div class="profile-tabs">
+      <div class="profile-tab active" data-tab="info">个人信息</div>
+      <div class="profile-tab" data-tab="stats">学习统计</div>
+      <div class="profile-tab" data-tab="settings">系统设置</div>
+    </div>
+    
+    <!-- 个人信息标签页 -->
+    <div class="tab-content active" id="info">
+      <div class="card">
+        <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem;">基本信息</h2>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label class="form-label">姓名</label>
+              <input type="text" class="form-control" value="李明" disabled>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label class="form-label">学号</label>
+              <input type="text" class="form-control" value="2023001001" disabled>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label class="form-label">专业</label>
+              <input type="text" class="form-control" value="计算机科学与技术" disabled>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label class="form-label">年级</label>
+              <input type="text" class="form-control" value="2023级" disabled>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label class="form-label">学院</label>
+              <input type="text" class="form-control" value="计算机学院" disabled>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label class="form-label">班级</label>
+              <input type="text" class="form-control" value="计科2301班" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card" style="margin-top: 1.5rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem;">学习专业</h2>
+        
+        <div class="row" style="margin-bottom: 1rem;">
+          <div class="col">
+            <div style="display: flex; align-items: center; padding: 1rem; border: 1px solid var(--border); border-radius: 0.5rem;">
+              <div style="width: 3rem; height: 3rem; background-color: #e0e7ff; border-radius: 0.5rem; display: flex; justify-content: center; align-items: center; margin-right: 1rem; color: var(--primary);">
+                <i class="ri-translate" style="font-size: 1.5rem;"></i>
+              </div>
+              
+              <div style="flex: 1;">
+                <h3 style="font-weight: 600; margin-bottom: 0.25rem;">HSK四级</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="color: var(--text-secondary); font-size: 0.875rem;">主要学科</span>
+                  <span style="color: var(--primary); font-size: 0.875rem; font-weight: 600;">75% 完成</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div style="display: flex; align-items: center; padding: 1rem; border: 1px solid var(--border); border-radius: 0.5rem;">
+              <div style="width: 3rem; height: 3rem; background-color: #e0e7ff; border-radius: 0.5rem; display: flex; justify-content: center; align-items: center; margin-right: 1rem; color: var(--primary);">
+                <i class="ri-english-input" style="font-size: 1.5rem;"></i>
+              </div>
+              
+              <div style="flex: 1;">
+                <h3 style="font-weight: 600; margin-bottom: 0.25rem;">大学英语四级</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="color: var(--text-secondary); font-size: 0.875rem;">次要学科</span>
+                  <span style="color: var(--primary); font-size: 0.875rem; font-weight: 600;">45% 完成</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <a href="subjects.html" class="btn btn-outline" style="display: flex; align-items: center; justify-content: center;">
+          <i class="ri-add-line" style="margin-right: 0.5rem;"></i> 添加学习专业
+        </a>
+      </div>
+    </div>
+    
+    <!-- 学习统计标签页 -->
+    <div class="tab-content" id="stats">
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">学习时长统计</h3>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
+              <div>
+                <span style="color: var(--text-secondary); font-size: 0.875rem;">本周学习时长</span>
+                <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">7.5小时</div>
+              </div>
+              
+              <div>
+                <span style="color: var(--text-secondary); font-size: 0.875rem;">较上周</span>
+                <div style="font-size: 1rem; font-weight: bold; color: #10b981; display: flex; align-items: center;">
+                  <i class="ri-arrow-up-line" style="margin-right: 0.25rem;"></i> 15%
+                </div>
+              </div>
+            </div>
+            
+            <div class="chart-container">
+              <div class="chart-placeholder">
+                <div style="text-align: center;">
+                  <i class="ri-line-chart-line" style="font-size: 3rem; margin-bottom: 0.5rem;"></i>
+                  <div>每日学习时长图表</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col">
+          <div class="card">
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">练习题量统计</h3>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
+              <div>
+                <span style="color: var(--text-secondary); font-size: 0.875rem;">本周练习题量</span>
+                <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">320题</div>
+              </div>
+              
+              <div>
+                <span style="color: var(--text-secondary); font-size: 0.875rem;">准确率</span>
+                <div style="font-size: 1rem; font-weight: bold; color: #3b82f6;">78%</div>
+              </div>
+            </div>
+            
+            <div class="chart-container">
+              <div class="chart-placeholder">
+                <div style="text-align: center;">
+                  <i class="ri-bar-chart-grouped-line" style="font-size: 3rem; margin-bottom: 0.5rem;"></i>
+                  <div>每日练习量统计图表</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card" style="margin-top: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">学科进度</h3>
+        
+        <div style="margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <div>
+              <span style="font-weight: 500;">HSK四级</span>
+              <span style="color: var(--text-secondary); font-size: 0.875rem; margin-left: 0.5rem;">1875 / 2500 题</span>
+            </div>
+            <span style="font-weight: 500;">75%</span>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 75%; background-color: #4f46e5;"></div>
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <div>
+              <span style="font-weight: 500;">大学英语四级</span>
+              <span style="color: var(--text-secondary); font-size: 0.875rem; margin-left: 0.5rem;">2250 / 5000 题</span>
+            </div>
+            <span style="font-weight: 500;">45%</span>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 45%; background-color: #3b82f6;"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <div>
+              <span style="font-weight: 500;">HSK五级</span>
+              <span style="color: var(--text-secondary); font-size: 0.875rem; margin-left: 0.5rem;">500 / 3200 题</span>
+            </div>
+            <span style="font-weight: 500;">16%</span>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 16%; background-color: #8b5cf6;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 系统设置标签页 -->
+    <div class="tab-content" id="settings">
+      <div class="card">
+        <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">学习设置</h3>
+        
+        <div class="setting-group">
+          <div class="setting-item">
+            <div class="setting-icon">
+              <i class="ri-notification-3-line"></i>
+            </div>
+            <div class="setting-content">
+              <h4 style="font-weight: 500; margin-bottom: 0.25rem;">学习提醒</h4>
+              <p style="color: var(--text-secondary); font-size: 0.875rem;">每日定时发送学习提醒</p>
+            </div>
+            <div class="setting-action">
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="setting-item">
+            <div class="setting-icon">
+              <i class="ri-timer-line"></i>
+            </div>
+            <div class="setting-content">
+              <h4 style="font-weight: 500; margin-bottom: 0.25rem;">每日学习目标</h4>
+              <p style="color: var(--text-secondary); font-size: 0.875rem;">设置每日学习题目数量</p>
+            </div>
+            <div class="setting-action">
+              <select class="form-control" style="width: auto;">
+                <option>30题</option>
+                <option selected>50题</option>
+                <option>100题</option>
+                <option>自定义</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="setting-item">
+            <div class="setting-icon">
+              <i class="ri-robot-line"></i>
+            </div>
+            <div class="setting-content">
+              <h4 style="font-weight: 500; margin-bottom: 0.25rem;">AI智能推荐</h4>
+              <p style="color: var(--text-secondary); font-size: 0.875rem;">根据你的学习情况推荐题目</p>
+            </div>
+            <div class="setting-action">
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card" style="margin-top: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">账号设置</h3>
+        
+        <div class="setting-group">
+          <div class="setting-item">
+            <div class="setting-icon">
+              <i class="ri-lock-password-line"></i>
+            </div>
+            <div class="setting-content">
+              <h4 style="font-weight: 500; margin-bottom: 0.25rem;">修改密码</h4>
+              <p style="color: var(--text-secondary); font-size: 0.875rem;">上次修改时间: 2023/06/01</p>
+            </div>
+            <div class="setting-action">
+              <button class="btn btn-outline">修改</button>
+            </div>
+          </div>
+          
+          <div class="setting-item">
+            <div class="setting-icon">
+              <i class="ri-wechat-line"></i>
+            </div>
+            <div class="setting-content">
+              <h4 style="font-weight: 500; margin-bottom: 0.25rem;">企业微信绑定</h4>
+              <p style="color: var(--text-secondary); font-size: 0.875rem;">已绑定企业微信账号</p>
+            </div>
+            <div class="setting-action">
+              <span class="btn btn-outline" style="color: #10b981; border-color: #10b981;">已绑定</span>
+            </div>
+          </div>
+          
+          <div class="setting-item">
+            <div class="setting-icon">
+              <i class="ri-logout-box-r-line"></i>
+            </div>
+            <div class="setting-content">
+              <h4 style="font-weight: 500; margin-bottom: 0.25rem;">退出登录</h4>
+              <p style="color: var(--text-secondary); font-size: 0.875rem;">退出当前账号登录</p>
+            </div>
+            <div class="setting-action">
+              <button class="btn btn-outline" style="color: var(--danger); border-color: var(--danger);">退出</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card" style="margin-top: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">系统信息</h3>
+        
+        <div style="color: var(--text-secondary); font-size: 0.875rem;">
+          <div style="margin-bottom: 0.5rem;">系统版本: v1.0.0</div>
+          <div>浙江财经大学智能考试系统 © 2023 All Rights Reserved.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 移动端底部导航 -->
+  <nav class="mobile-navbar">
+    <ul class="mobile-navbar-menu">
+      <li class="mobile-navbar-item">
+        <a href="home.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-home-4-line"></i>
+          <span>首页</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="subjects.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-book-open-line"></i>
+          <span>学科</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="practice.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-edit-line"></i>
+          <span>练习</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="wrong-questions.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-error-warning-line"></i>
+          <span>错题</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="profile.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-user-line"></i>
+          <span>我的</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 标签页切换
+      const tabs = document.querySelectorAll('.profile-tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // 移除所有标签的激活状态
+          tabs.forEach(t => t.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
+          
+          // 激活当前标签
+          this.classList.add('active');
+          const tabId = this.getAttribute('data-tab');
+          document.getElementById(tabId).classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html> 

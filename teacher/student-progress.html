@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - 学生进度</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* 基础样式设置 */
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #eef2ff;
+      --primary-dark: #4338ca;
+      --secondary: #6b7280;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --background: #f9fafb;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --border-radius: 0.5rem;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--background);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* 侧边栏样式 */
+    .sidebar {
+      width: 250px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 10;
+    }
+    
+    .sidebar-header {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .sidebar-logo {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 8px;
+      background-color: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.25rem;
+      margin-right: 0.75rem;
+    }
+    
+    .sidebar-title {
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    
+    .sidebar-menu {
+      flex: 1;
+      padding: 1.5rem 0;
+      overflow-y: auto;
+    }
+    
+    .sidebar-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .sidebar-section-title {
+      padding: 0 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+    
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .sidebar-link:hover {
+      background-color: var(--primary-light);
+    }
+    
+    .sidebar-link.active {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-left: 3px solid var(--primary);
+    }
+    
+    .sidebar-icon {
+      margin-right: 0.75rem;
+      font-size: 1.25rem;
+    }
+    
+    .sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+    }
+    
+    .sidebar-footer-avatar {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 8px;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 0.75rem;
+    }
+    
+    /* 主内容区域样式 */
+    .main-content {
+      flex: 1;
+      margin-left: 250px;
+      padding: 1.5rem;
+    }
+    
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+    }
+    
+    .topbar-icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      margin-left: 0.75rem;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .topbar-icon:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+    
+    .topbar-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: var(--danger);
+      color: white;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- 侧边栏 -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Z</div>
+      <div class="sidebar-title">浙财智能考试系统</div>
+    </div>
+    
+    <div class="sidebar-menu">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">教学管理</div>
+        <a href="student-progress.html" class="sidebar-link active">
+          <i class="ri-line-chart-line sidebar-icon"></i>
+          <span>学生进度</span>
+        </a>
+        <a href="question-review.html" class="sidebar-link">
+          <i class="ri-file-list-3-line sidebar-icon"></i>
+          <span>题目审核</span>
+        </a>
+        <a href="paper-upload.html" class="sidebar-link">
+          <i class="ri-upload-cloud-line sidebar-icon"></i>
+          <span>试卷上传</span>
+        </a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">账户</div>
+        <a href="login.html" class="sidebar-link">
+          <i class="ri-logout-box-line sidebar-icon"></i>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-avatar">李</div>
+      <div>
+        <div style="font-weight: 500;">李教授</div>
+        <div style="font-size: 0.75rem; color: var(--text-secondary);">计算机学院</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 主内容区域 -->
+  <div class="main-content">
+    <div class="topbar">
+      <h1 class="page-title">学生进度</h1>
+    </div>
+    
+    <div class="dashboard-container">
+      <!-- 筛选栏 -->
+      <div class="filter-section">
+        <div class="filter-form">
+          <div class="filter-group">
+            <label class="filter-label">专业</label>
+            <select class="filter-select">
+              <option value="all">全部专业</option>
+              <option value="cs">计算机科学</option>
+              <option value="finance">金融学</option>
+              <option value="accounting">会计学</option>
+              <option value="economics">经济学</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">班级</label>
+            <select class="filter-select">
+              <option value="all">全部班级</option>
+              <option value="2301">2301班</option>
+              <option value="2302">2302班</option>
+              <option value="2303">2303班</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">学科</label>
+            <select class="filter-select">
+              <option value="all">全部学科</option>
+              <option value="hsk">HSK考试</option>
+              <option value="cet4">大学英语四级</option>
+              <option value="math">高等数学</option>
+              <option value="programming">编程基础</option>
+            </select>
+          </div>
+          <button class="filter-button">
+            <i class="ri-filter-3-line"></i>
+            筛选
+          </button>
+        </div>
+      </div>
+      
+      <!-- 统计卡片 -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background-color: var(--primary-light); color: var(--primary);">
+            <i class="ri-user-line"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">125</div>
+            <div class="stat-label">学生总数</div>
+          </div>
+          <div class="stat-change stat-up">
+            <i class="ri-arrow-up-line"></i>
+            <span>5.2%</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon" style="background-color: var(--success-light); color: var(--success);">
+            <i class="ri-time-line"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">82.5%</div>
+            <div class="stat-label">平均出勤率</div>
+          </div>
+          <div class="stat-change stat-up">
+            <i class="ri-arrow-up-line"></i>
+            <span>1.8%</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon" style="background-color: var(--warning-light); color: var(--warning);">
+            <i class="ri-book-open-line"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">68.3%</div>
+            <div class="stat-label">平均正确率</div>
+          </div>
+          <div class="stat-change stat-down">
+            <i class="ri-arrow-down-line"></i>
+            <span>2.1%</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon" style="background-color: var(--danger-light); color: var(--danger);">
+            <i class="ri-error-warning-line"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">12</div>
+            <div class="stat-label">需注意学生</div>
+          </div>
+          <div class="stat-change stat-down">
+            <i class="ri-arrow-down-line"></i>
+            <span>3.0%</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 学生列表和图表 -->
+      <div class="progress-section">
+        <!-- 学生列表 -->
+        <div class="student-list-card">
+          <div class="card-header">
+            <h2 class="card-title">学生列表</h2>
+            <div class="card-actions">
+              <div class="search-box">
+                <i class="ri-search-line search-icon"></i>
+                <input type="text" placeholder="搜索学生" class="search-input">
+              </div>
+              <button class="action-button">
+                <i class="ri-download-line"></i>
+                导出
+              </button>
+            </div>
+          </div>
+          
+          <div class="student-table-wrapper">
+            <table class="student-table">
+              <thead>
+                <tr>
+                  <th class="sortable">
+                    <span>学生</span>
+                    <i class="ri-arrow-up-down-line sort-icon"></i>
+                  </th>
+                  <th class="sortable">
+                    <span>学号</span>
+                    <i class="ri-arrow-up-down-line sort-icon"></i>
+                  </th>
+                  <th class="sortable">
+                    <span>完成进度</span>
+                    <i class="ri-arrow-up-down-line sort-icon"></i>
+                  </th>
+                  <th class="sortable">
+                    <span>正确率</span>
+                    <i class="ri-arrow-up-down-line sort-icon"></i>
+                  </th>
+                  <th class="sortable">
+                    <span>最近练习</span>
+                    <i class="ri-arrow-up-down-line sort-icon"></i>
+                  </th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="active-row">
+                  <td class="student-cell">
+                    <div class="student-avatar">王</div>
+                    <div class="student-info">
+                      <div class="student-name">王小明</div>
+                      <div class="student-class">计科2301班</div>
+                    </div>
+                  </td>
+                  <td>2023001001</td>
+                  <td>
+                    <div class="progress-wrapper">
+                      <div class="progress-bar">
+                        <div class="progress-fill" style="width: 78%"></div>
+                      </div>
+                      <span class="progress-text">78%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="accuracy high">91.5%</span>
+                  </td>
+                  <td>今天 14:30</td>
+                  <td>
+                    <button class="icon-button">
+                      <i class="ri-eye-line"></i>
+                    </button>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td class="student-cell">
+                    <div class="student-avatar">李</div>
+                    <div class="student-info">
+                      <div class="student-name">李华</div>
+                      <div class="student-class">计科2301班</div>
+                    </div>
+                  </td>
+                  <td>2023001002</td>
+                  <td>
+                    <div class="progress-wrapper">
+                      <div class="progress-bar">
+                        <div class="progress-fill" style="width: 62%"></div>
+                      </div>
+                      <span class="progress-text">62%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="accuracy medium">75.3%</span>
+                  </td>
+                  <td>昨天 16:45</td>
+                  <td>
+                    <button class="icon-button">
+                      <i class="ri-eye-line"></i>
+                    </button>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td class="student-cell">
+                    <div class="student-avatar">张</div>
+                    <div class="student-info">
+                      <div class="student-name">张三</div>
+                      <div class="student-class">计科2302班</div>
+                    </div>
+                  </td>
+                  <td>2023002001</td>
+                  <td>
+                    <div class="progress-wrapper">
+                      <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%"></div>
+                      </div>
+                      <span class="progress-text">45%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="accuracy low">58.7%</span>
+                  </td>
+                  <td>3天前</td>
+                  <td>
+                    <button class="icon-button">
+                      <i class="ri-eye-line"></i>
+                    </button>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td class="student-cell">
+                    <div class="student-avatar">赵</div>
+                    <div class="student-info">
+                      <div class="student-name">赵丽</div>
+                      <div class="student-class">计科2302班</div>
+                    </div>
+                  </td>
+                  <td>2023002002</td>
+                  <td>
+                    <div class="progress-wrapper">
+                      <div class="progress-bar">
+                        <div class="progress-fill" style="width: 83%"></div>
+                      </div>
+                      <span class="progress-text">83%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="accuracy high">88.2%</span>
+                  </td>
+                  <td>今天 09:15</td>
+                  <td>
+                    <button class="icon-button">
+                      <i class="ri-eye-line"></i>
+                    </button>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td class="student-cell">
+                    <div class="student-avatar">陈</div>
+                    <div class="student-info">
+                      <div class="student-name">陈明</div>
+                      <div class="student-class">计科2301班</div>
+                    </div>
+                  </td>
+                  <td>2023001003</td>
+                  <td>
+                    <div class="progress-wrapper">
+                      <div class="progress-bar">
+                        <div class="progress-fill" style="width: 29%"></div>
+                      </div>
+                      <span class="progress-text">29%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="accuracy low">42.8%</span>
+                  </td>
+                  <td>1周前</td>
+                  <td>
+                    <button class="icon-button">
+                      <i class="ri-eye-line"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="table-footer">
+            <div class="pagination">
+              <button class="pagination-button" disabled>
+                <i class="ri-arrow-left-s-line"></i>
+              </button>
+              <button class="pagination-button active">1</button>
+              <button class="pagination-button">2</button>
+              <button class="pagination-button">3</button>
+              <span class="pagination-ellipsis">...</span>
+              <button class="pagination-button">10</button>
+              <button class="pagination-button">
+                <i class="ri-arrow-right-s-line"></i>
+              </button>
+            </div>
+            
+            <div class="page-size">
+              <span>每页显示：</span>
+              <select class="page-size-select">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 图表部分将在下一步添加 -->
+        <!-- 图表区域 -->
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="card-header">
+              <h2 class="card-title">学习进度分布</h2>
+              <div class="card-actions">
+                <div class="chart-tabs">
+                  <button class="chart-tab active">本月</button>
+                  <button class="chart-tab">本学期</button>
+                  <button class="chart-tab">全年</button>
+                </div>
+              </div>
+            </div>
+            <div class="chart-body">
+              <canvas id="progressChart"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-card">
+            <div class="card-header">
+              <h2 class="card-title">知识点掌握情况</h2>
+              <div class="card-actions">
+                <div class="chart-tabs">
+                  <button class="chart-tab active">总体</button>
+                  <button class="chart-tab">按班级</button>
+                </div>
+              </div>
+            </div>
+            <div class="chart-body">
+              <canvas id="accuracyChart"></canvas>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 学生详情区域 -->
+        <div class="student-detail-area" id="studentDetail">
+          <div class="detail-header">
+            <div class="detail-student">
+              <div class="detail-avatar">王</div>
+              <div class="detail-info">
+                <h3 class="detail-name">王小明</h3>
+                <div class="detail-meta">
+                  <span class="detail-id">学号: 2023001001</span>
+                  <span class="detail-class">计科2301班</span>
+                </div>
+              </div>
+            </div>
+            <button class="close-detail" id="closeDetail">
+              <i class="ri-close-line"></i>
+            </button>
+          </div>
+          
+          <div class="detail-stats">
+            <div class="detail-stat-item">
+              <div class="detail-stat-value">42</div>
+              <div class="detail-stat-label">学习时长（小时）</div>
+            </div>
+            <div class="detail-stat-item">
+              <div class="detail-stat-value">85%</div>
+              <div class="detail-stat-label">练习完成率</div>
+            </div>
+            <div class="detail-stat-item">
+              <div class="detail-stat-value">91.5%</div>
+              <div class="detail-stat-label">正确率</div>
+            </div>
+            <div class="detail-stat-item">
+              <div class="detail-stat-value">42</div>
+              <div class="detail-stat-label">已完成练习</div>
+            </div>
+          </div>
+          
+          <div class="detail-charts">
+            <div class="chart-card">
+              <div class="card-header">
+                <h2 class="card-title">知识点掌握情况</h2>
+              </div>
+              <div class="chart-body">
+                <canvas id="knowledgeRadarChart"></canvas>
+              </div>
+            </div>
+            
+            <div class="chart-card">
+              <div class="card-header">
+                <h2 class="card-title">学习进度趋势</h2>
+              </div>
+              <div class="chart-body">
+                <canvas id="progressTrendChart"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <div class="ai-suggestions">
+            <h3 class="suggestions-title">AI学习建议</h3>
+            <div class="suggestions-content">
+              <p>基于王小明同学的学习数据分析，AI智能系统提供以下学习建议：</p>
+              <ul class="suggestions-list">
+                <li class="suggestion-item">
+                  <i class="ri-check-line suggestion-icon"></i>
+                  <span>加强对"函数"知识点的巩固练习，当前掌握度较低</span>
+                </li>
+                <li class="suggestion-item">
+                  <i class="ri-check-line suggestion-icon"></i>
+                  <span>建议增加英语听力训练，每天至少30分钟</span>
+                </li>
+                <li class="suggestion-item">
+                  <i class="ri-check-line suggestion-icon"></i>
+                  <span>可以尝试更高难度的阅读理解练习，当前已有较好基础</span>
+                </li>
+                <li class="suggestion-item">
+                  <i class="ri-check-line suggestion-icon"></i>
+                  <span>注意复习错题，特别是最近3次练习中的错题</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="toast" id="toast"></div>
+  
+  <style>
+    /* 筛选栏样式 */
+    .filter-section {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .filter-form {
+      display: flex;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+      min-width: 180px;
+    }
+    
+    .filter-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    
+    .filter-select {
+      padding: 0.625rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      background-color: white;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      background-size: 1rem;
+      padding-right: 2rem;
+    }
+    
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+    
+    .filter-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      background-color: var(--primary);
+      color: white;
+      font-weight: 500;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    
+    .filter-button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    /* 统计卡片样式 */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    
+    .stat-icon {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .stat-content {
+      flex: 1;
+    }
+    
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+    
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    .stat-change {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+    }
+    
+    .stat-up {
+      color: var(--success);
+      background-color: var(--success-light);
+    }
+    
+    .stat-down {
+      color: var(--danger);
+      background-color: var(--danger-light);
+    }
+    
+    /* 学生列表样式 */
+    .progress-section {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .student-list-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+    
+    .card-header {
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .search-box {
+      position: relative;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+    
+    .search-input {
+      padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      width: 200px;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+    
+    .action-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background-color: white;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    
+    .action-button:hover {
+      background-color: var(--background);
+    }
+    
+    .student-table-wrapper {
+      overflow-x: auto;
+    }
+    
+    .student-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .student-table th, 
+    .student-table td {
+      padding: 1rem;
+      text-align: left;
+    }
+    
+    .student-table th {
+      font-weight: 500;
+      color: var(--text-secondary);
+      background-color: var(--background);
+      font-size: 0.875rem;
+    }
+    
+    .student-table td {
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+    }
+    
+    .sortable {
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+    
+    .sortable span {
+      margin-right: 0.25rem;
+    }
+    
+    .sort-icon {
+      font-size: 1rem;
+      vertical-align: middle;
+    }
+    
+    .student-cell {
+      display: flex;
+      align-items: center;
+    }
+    
+    .student-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.5rem;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 0.75rem;
+    }
+    
+    .student-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .student-name {
+      font-weight: 500;
+    }
+    
+    .student-class {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    
+    .progress-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .progress-bar {
+      flex: 1;
+      height: 0.5rem;
+      background-color: var(--border);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background-color: var(--primary);
+      border-radius: 9999px;
+    }
+    
+    .progress-text {
+      font-size: 0.875rem;
+      font-weight: 500;
+      min-width: 2.5rem;
+    }
+    
+    .accuracy {
+      font-weight: 500;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+    }
+    
+    .accuracy.high {
+      background-color: var(--success-light);
+      color: var(--success);
+    }
+    
+    .accuracy.medium {
+      background-color: var(--warning-light);
+      color: var(--warning);
+    }
+    
+    .accuracy.low {
+      background-color: var(--danger-light);
+      color: var(--danger);
+    }
+    
+    .icon-button {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    
+    .icon-button:hover {
+      background-color: var(--background);
+      color: var(--primary);
+    }
+    
+    .active-row {
+      background-color: var(--primary-light);
+    }
+    
+    .table-footer {
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+    }
+    
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .pagination-button {
+      min-width: 2rem;
+      height: 2rem;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    
+    .pagination-button:hover:not(:disabled) {
+      background-color: var(--background);
+    }
+    
+    .pagination-button.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .pagination-button:disabled {
+      color: var(--text-secondary);
+      cursor: not-allowed;
+    }
+    
+    .pagination-ellipsis {
+      margin: 0 0.25rem;
+    }
+    
+    .page-size {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    .page-size-select {
+      padding: 0.25rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      background-color: white;
+    }
+    
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .card-actions {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .search-input {
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .filter-form {
+        flex-direction: column;
+      }
+      
+      .filter-button {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .table-footer {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .pagination {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    
+    /* 图表和详情区域样式 */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .chart-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+    
+    .chart-body {
+      padding: 1.25rem;
+      height: 300px;
+    }
+    
+    .chart-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .chart-tab {
+      padding: 0.375rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      background-color: white;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    
+    .chart-tab.active {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary-light);
+    }
+    
+    /* 学生详情区域样式 */
+    .student-detail-area {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: none; /* 默认隐藏 */
+    }
+    
+    .student-detail-area.active {
+      display: block;
+    }
+    
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .detail-student {
+      display: flex;
+      align-items: center;
+    }
+    
+    .detail-avatar {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 0.75rem;
+      background-color: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-right: 1rem;
+    }
+    
+    .detail-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 0.25rem 0;
+    }
+    
+    .detail-meta {
+      display: flex;
+      gap: 1rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    .close-detail {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--background);
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 1.25rem;
+    }
+    
+    .close-detail:hover {
+      background-color: var(--danger-light);
+      color: var(--danger);
+    }
+    
+    .detail-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .detail-stat-item {
+      background-color: var(--background);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+    
+    .detail-stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+    
+    .detail-stat-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    .detail-charts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .ai-suggestions {
+      background-color: var(--background);
+      padding: 1.25rem;
+      border-radius: var(--border-radius);
+    }
+    
+    .suggestions-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0 0 1rem 0;
+    }
+    
+    .suggestions-content p {
+      margin: 0 0 1rem 0;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    .suggestions-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .suggestion-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+    }
+    
+    .suggestion-icon {
+      color: var(--success);
+      margin-right: 0.5rem;
+      margin-top: 0.125rem;
+    }
+    
+    /* Toast提示样式 */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      background-color: var(--text-primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      opacity: 0;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    
+    /* 响应式样式增强 */
+    @media (max-width: 992px) {
+      .charts-grid, 
+      .detail-charts {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .detail-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 初始化图表
+      initCharts();
+      
+      // 筛选功能
+      const filterButton = document.querySelector('.filter-button');
+      if (filterButton) {
+        filterButton.addEventListener('click', function() {
+          this.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> 加载中...';
+          
+          // 模拟API请求延迟
+          setTimeout(() => {
+            this.innerHTML = '<i class="ri-filter-3-line"></i> 筛选';
+            showToast('筛选条件已应用');
+          }, 800);
+        });
+      }
+      
+      // 表格排序
+      const sortableHeaders = document.querySelectorAll('th.sortable');
+      sortableHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+          const icon = this.querySelector('.sort-icon');
+          
+          // 移除其他列的排序状态
+          sortableHeaders.forEach(h => {
+            if (h !== this) {
+              h.querySelector('.sort-icon').className = 'ri-arrow-up-down-line sort-icon';
+            }
+          });
+          
+          // 切换当前列的排序状态
+          if (icon.className.includes('ri-arrow-up-down-line')) {
+            icon.className = 'ri-arrow-up-line sort-icon';
+          } else if (icon.className.includes('ri-arrow-up-line')) {
+            icon.className = 'ri-arrow-down-line sort-icon';
+          } else {
+            icon.className = 'ri-arrow-up-down-line sort-icon';
+          }
+          
+          // 显示排序提示
+          const columnName = this.querySelector('span').textContent;
+          showToast(`按${columnName}排序`);
+        });
+      });
+      
+      // 学生详情查看
+      const viewButtons = document.querySelectorAll('.icon-button');
+      const studentDetail = document.getElementById('studentDetail');
+      const closeDetail = document.getElementById('closeDetail');
+      
+      viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const row = this.closest('tr');
+          const name = row.querySelector('.student-name').textContent;
+          const avatarText = row.querySelector('.student-avatar').textContent;
+          
+          // 更新详情区域数据
+          document.querySelector('.detail-avatar').textContent = avatarText;
+          document.querySelector('.detail-name').textContent = name;
+          
+          // 显示详情区域
+          studentDetail.classList.add('active');
+          
+          // 滚动到详情区域
+          studentDetail.scrollIntoView({ behavior: 'smooth' });
+          
+          // 更新雷达图数据
+          updateRadarChart();
+          updateProgressTrendChart();
+          
+          showToast(`查看 ${name} 的详细情况`);
+        });
+      });
+      
+      if (closeDetail) {
+        closeDetail.addEventListener('click', function() {
+          studentDetail.classList.remove('active');
+        });
+      }
+      
+      // 图表标签切换
+      const chartTabs = document.querySelectorAll('.chart-tab');
+      chartTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // 找到同组的所有标签
+          const tabs = this.parentElement.querySelectorAll('.chart-tab');
+          tabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          
+          // 根据不同的图表更新数据
+          const chartTitle = this.closest('.card-header').querySelector('.card-title').textContent;
+          
+          if (chartTitle.includes('学习进度')) {
+            updateProgressChart(this.textContent);
+          } else if (chartTitle.includes('知识点')) {
+            updateAccuracyChart(this.textContent);
+          }
+        });
+      });
+      
+      // 分页功能
+      const paginationButtons = document.querySelectorAll('.pagination-button:not([disabled])');
+      paginationButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // 移除其他按钮的active类
+          paginationButtons.forEach(btn => btn.classList.remove('active'));
+          
+          // 不给箭头按钮添加active类
+          if (!this.innerHTML.includes('ri-arrow')) {
+            this.classList.add('active');
+            showToast(`加载第 ${this.textContent} 页数据`);
+          }
+        });
+      });
+    });
+    
+    // 初始化图表
+    function initCharts() {
+      // 学习进度分布图
+      const progressCtx = document.getElementById('progressChart');
+      if (progressCtx) {
+        const progressChart = new Chart(progressCtx, {
+          type: 'bar',
+          data: {
+            labels: ['<20%', '20-40%', '40-60%', '60-80%', '80-100%'],
+            datasets: [{
+              label: '学生数量',
+              data: [5, 12, 28, 45, 35],
+              backgroundColor: '#4f46e5',
+              borderRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: '学生数量'
+                }
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: '完成进度'
+                }
+              }
+            }
+          }
+        });
+      }
+      
+      // 知识点掌握情况图
+      const accuracyCtx = document.getElementById('accuracyChart');
+      if (accuracyCtx) {
+        const accuracyChart = new Chart(accuracyCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['优秀 (>80%)', '良好 (60-80%)', '一般 (40-60%)', '待加强 (<40%)'],
+            datasets: [{
+              data: [42, 28, 18, 12],
+              backgroundColor: [
+                '#10b981', // 绿色 - 优秀
+                '#4f46e5', // 蓝色 - 良好
+                '#f59e0b', // 黄色 - 一般
+                '#ef4444'  // 红色 - 待加强
+              ],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: {
+                  boxWidth: 15,
+                  padding: 15,
+                  font: {
+                    size: 12
+                  }
+                }
+              }
+            },
+            cutout: '70%'
+          }
+        });
+      }
+    }
+    
+    // 更新雷达图
+    function updateRadarChart() {
+      const knowledgeRadarCtx = document.getElementById('knowledgeRadarChart');
+      if (knowledgeRadarCtx) {
+        // 销毁旧的图表实例（如果存在）
+        if (window.knowledgeRadarChart instanceof Chart) {
+          window.knowledgeRadarChart.destroy();
+        }
+        
+        window.knowledgeRadarChart = new Chart(knowledgeRadarCtx, {
+          type: 'radar',
+          data: {
+            labels: ['词汇', '语法', '听力', '阅读', '写作', '口语'],
+            datasets: [{
+              label: '学生掌握度',
+              data: [85, 65, 80, 90, 75, 60],
+              backgroundColor: 'rgba(79, 70, 229, 0.2)',
+              borderColor: '#4f46e5',
+              pointBackgroundColor: '#4f46e5',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 1,
+              pointRadius: 4
+            }, {
+              label: '班级平均',
+              data: [70, 68, 65, 75, 60, 55],
+              backgroundColor: 'rgba(16, 185, 129, 0.2)',
+              borderColor: '#10b981',
+              pointBackgroundColor: '#10b981',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 1,
+              pointRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                  stepSize: 20,
+                  display: false
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+    
+    // 更新进度趋势图
+    function updateProgressTrendChart() {
+      const progressTrendCtx = document.getElementById('progressTrendChart');
+      if (progressTrendCtx) {
+        // 销毁旧的图表实例（如果存在）
+        if (window.progressTrendChart instanceof Chart) {
+          window.progressTrendChart.destroy();
+        }
+        
+        window.progressTrendChart = new Chart(progressTrendCtx, {
+          type: 'line',
+          data: {
+            labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+            datasets: [{
+              label: '完成进度',
+              data: [25, 40, 55, 70, 78, 85],
+              borderColor: '#4f46e5',
+              backgroundColor: 'rgba(79, 70, 229, 0.1)',
+              tension: 0.3,
+              fill: true
+            }, {
+              label: '正确率',
+              data: [60, 65, 75, 82, 88, 91],
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.0)',
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                  callback: function(value) {
+                    return value + '%';
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+    
+    // 更新进度分布图
+    function updateProgressChart(period) {
+      const progressCtx = document.getElementById('progressChart');
+      if (!progressCtx) return;
+      
+      const chart = Chart.getChart(progressCtx);
+      if (!chart) return;
+      
+      let data;
+      
+      if (period.includes('本月')) {
+        data = [5, 12, 28, 45, 35];
+      } else if (period.includes('本学期')) {
+        data = [3, 15, 32, 48, 27];
+      } else {
+        data = [2, 10, 25, 40, 48];
+      }
+      
+      chart.data.datasets[0].data = data;
+      chart.update();
+      
+      showToast(`已更新为${period}数据`);
+    }
+    
+    // 更新知识点掌握情况图
+    function updateAccuracyChart(type) {
+      const accuracyCtx = document.getElementById('accuracyChart');
+      if (!accuracyCtx) return;
+      
+      const chart = Chart.getChart(accuracyCtx);
+      if (!chart) return;
+      
+      let data;
+      
+      if (type.includes('总体')) {
+        data = [42, 28, 18, 12];
+      } else if (type.includes('班级')) {
+        data = [35, 32, 25, 8];
+      }
+      
+      chart.data.datasets[0].data = data;
+      chart.update();
+      
+      showToast(`已更新为${type}数据`);
+    }
+    
+    // 显示Toast提示
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html> 

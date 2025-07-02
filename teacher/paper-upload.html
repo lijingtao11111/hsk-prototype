@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - 试卷上传</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    /* 基础样式设置 */
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #eef2ff;
+      --primary-dark: #4338ca;
+      --secondary: #6b7280;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --background: #f9fafb;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --border-radius: 0.5rem;
+      --transition: all 0.2s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--background);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* 侧边栏样式 */
+    .sidebar {
+      width: 250px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 10;
+    }
+    
+    .sidebar-header {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .sidebar-logo {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 8px;
+      background-color: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.25rem;
+      margin-right: 0.75rem;
+    }
+    
+    .sidebar-title {
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    
+    .sidebar-menu {
+      flex: 1;
+      padding: 1.5rem 0;
+      overflow-y: auto;
+    }
+    
+    .sidebar-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .sidebar-section-title {
+      padding: 0 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+    
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .sidebar-link:hover {
+      background-color: var(--primary-light);
+    }
+    
+    .sidebar-link.active {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-left: 3px solid var(--primary);
+    }
+    
+    .sidebar-icon {
+      margin-right: 0.75rem;
+      font-size: 1.25rem;
+    }
+    
+    .sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+    }
+    
+    .sidebar-footer-avatar {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 8px;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 0.75rem;
+    }
+    
+    /* 主内容区域样式 */
+    .main-content {
+      flex: 1;
+      margin-left: 250px;
+      padding: 1.5rem;
+    }
+    
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+    }
+    
+    .topbar-icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      margin-left: 0.75rem;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .topbar-icon:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+    
+    .topbar-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: var(--danger);
+      color: white;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* 页面内容 */
+    .page-content {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    
+    /* 卡片样式 */
+    .card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #f9fafb;
+    }
+    
+    .card-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    /* 上传区域样式 */
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: var(--border-radius);
+      padding: 2.5rem;
+      text-align: center;
+      transition: var(--transition);
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      position: relative;
+      background-color: #fafafa;
+    }
+    
+    .upload-area:hover {
+      border-color: var(--primary);
+      background-color: var(--primary-light);
+    }
+    
+    .upload-area.drag-over {
+      border-color: var(--primary);
+      background-color: var(--primary-light);
+    }
+    
+    .upload-icon {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      display: inline-block;
+      line-height: 1;
+    }
+    
+    .upload-text {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+    
+    .upload-hint {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    
+    /* 表单样式 */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      transition: var(--transition);
+      color: var(--text-primary);
+      background-color: white;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .form-control::placeholder {
+      color: var(--text-secondary);
+    }
+    
+    .form-select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      transition: var(--transition);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1rem;
+      color: var(--text-primary);
+      background-color: white;
+    }
+    
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    /* 复选框美化 */
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    
+    .checkbox-group:last-child {
+      margin-bottom: 0;
+    }
+    
+    .custom-checkbox {
+      position: relative;
+      display: inline-block;
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-right: 0.5rem;
+    }
+    
+    .custom-checkbox input {
+      opacity: 0;
+      position: absolute;
+    }
+    
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      background-color: white;
+      transition: var(--transition);
+    }
+    
+    .custom-checkbox input:checked ~ .checkmark {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+    
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 0.45rem;
+      top: 0.2rem;
+      width: 0.25rem;
+      height: 0.5rem;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    
+    .custom-checkbox input:checked ~ .checkmark:after {
+      display: block;
+    }
+    
+    /* 按钮样式 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+    
+    .btn-outline:hover {
+      background-color: #f9fafb;
+      border-color: var(--text-secondary);
+    }
+    
+    .btn-icon {
+      margin-right: 0.5rem;
+      font-size: 1.125rem;
+    }
+    
+    /* 文件列表样式 */
+    .file-list {
+      margin-top: 0.5rem;
+    }
+    
+    .file-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      margin-bottom: 0.75rem;
+      transition: var(--transition);
+      background-color: white;
+    }
+    
+    .file-item:hover {
+      border-color: var(--primary-light);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .file-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      background-color: var(--primary-light);
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      color: var(--primary);
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    
+    .file-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .file-name {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .file-meta {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .file-size {
+      display: flex;
+      align-items: center;
+    }
+    
+    .file-size i {
+      margin-right: 0.25rem;
+      font-size: 0.875rem;
+    }
+    
+    .file-date {
+      display: flex;
+      align-items: center;
+    }
+    
+    .file-date i {
+      margin-right: 0.25rem;
+      font-size: 0.875rem;
+    }
+    
+    .file-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-left: 1rem;
+    }
+    
+    .file-action {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      background-color: transparent;
+      border: none;
+    }
+    
+    .file-action:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+    
+    /* 进度条样式 */
+    .progress-container {
+      width: 100%;
+      height: 0.375rem;
+      background-color: #e5e7eb;
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background-color: var(--primary);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+    
+    /* 上传状态标签 */
+    .upload-status {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-left: 0.5rem;
+    }
+    
+    .status-success {
+      background-color: var(--success-light);
+      color: var(--success);
+    }
+    
+    .status-processing {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+    
+    .status-error {
+      background-color: var(--danger-light);
+      color: var(--danger);
+    }
+    
+    /* 动画 */
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+    
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      
+      .sidebar.show {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .menu-toggle {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 侧边栏 -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Z</div>
+      <div class="sidebar-title">浙财智能考试系统</div>
+    </div>
+    
+    <div class="sidebar-menu">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">教学管理</div>
+        <a href="student-progress.html" class="sidebar-link">
+          <i class="ri-line-chart-line sidebar-icon"></i>
+          <span>学生进度</span>
+        </a>
+        <a href="question-review.html" class="sidebar-link">
+          <i class="ri-file-list-3-line sidebar-icon"></i>
+          <span>题目审核</span>
+        </a>
+        <a href="paper-upload.html" class="sidebar-link active">
+          <i class="ri-upload-cloud-line sidebar-icon"></i>
+          <span>试卷上传</span>
+        </a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">账户</div>
+        <a href="login.html" class="sidebar-link">
+          <i class="ri-logout-box-line sidebar-icon"></i>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-avatar">李</div>
+      <div>
+        <div style="font-weight: 500;">李教授</div>
+        <div style="font-size: 0.75rem; color: var(--text-secondary);">计算机学院</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 主内容区域 -->
+  <div class="main-content">
+    <div class="topbar">
+      <h1 class="page-title">试卷上传</h1>
+    </div>
+    
+    <div class="upload-container">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="ri-upload-cloud-2-line" style="margin-right: 0.5rem;"></i>
+            上传新试卷
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="upload-area" id="upload-area">
+            <i class="ri-upload-cloud-2-line upload-icon"></i>
+            <div class="upload-text">点击或拖拽文件到此处上传</div>
+            <div class="upload-hint">支持 PDF、Word、图片格式，单个文件最大 20MB</div>
+            <input type="file" id="file-upload" style="display: none;" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+          </div>
+          
+          <form id="upload-form">
+            <div class="form-group">
+              <label class="form-label" for="paper-name">试卷名称</label>
+              <input type="text" id="paper-name" class="form-control" placeholder="例如：2023年6月HSK四级真题">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="subject-select">学科</label>
+              <select id="subject-select" class="form-select">
+                <option value="">请选择学科</option>
+                <option value="hsk4">HSK四级</option>
+                <option value="hsk5">HSK五级</option>
+                <option value="cet4">大学英语四级</option>
+                <option value="math">高等数学</option>
+                <option value="prog">程序设计</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="paper-type">试卷类型</label>
+              <select id="paper-type" class="form-select">
+                <option value="">请选择试卷类型</option>
+                <option value="real_exam">真题试卷</option>
+                <option value="mock_exam">模拟试卷</option>
+                <option value="practice">练习题</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="paper-description">试卷描述</label>
+              <textarea id="paper-description" class="form-control" rows="3" placeholder="请输入试卷的简要描述..."></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">AI解析设置</label>
+              <div class="checkbox-group">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="auto-parse" checked>
+                  <span class="checkmark"></span>
+                </label>
+                <span>上传后自动进行AI解析</span>
+              </div>
+              <div class="checkbox-group">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="auto-tag" checked>
+                  <span class="checkmark"></span>
+                </label>
+                <span>自动标注知识点</span>
+              </div>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+              <button type="button" id="cancel-btn" class="btn btn-outline">取消</button>
+              <button type="submit" id="upload-btn" class="btn btn-primary">
+                <i class="ri-upload-2-line btn-icon"></i>
+                开始上传
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="ri-history-line" style="margin-right: 0.5rem;"></i>
+            最近上传
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="file-list" id="file-list">
+            <div class="file-item">
+              <div class="file-icon">
+                <i class="ri-file-pdf-line"></i>
+              </div>
+              <div class="file-info">
+                <div class="file-name">2023年6月HSK四级真题.pdf</div>
+                <div class="file-meta">
+                  <div class="file-size">
+                    <i class="ri-file-list-line"></i>
+                    <span>2.4MB</span>
+                  </div>
+                  <div class="file-date">
+                    <i class="ri-time-line"></i>
+                    <span>上传于 2023-06-15</span>
+                  </div>
+                  <span class="upload-status status-success">已解析</span>
+                </div>
+                <div class="progress-container">
+                  <div class="progress-bar" style="width: 100%;"></div>
+                </div>
+              </div>
+              <div class="file-actions">
+                <button class="file-action" title="查看详情">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="file-action" title="下载文件">
+                  <i class="ri-download-line"></i>
+                </button>
+                <button class="file-action" title="删除文件">
+                  <i class="ri-delete-bin-line"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="file-item">
+              <div class="file-icon">
+                <i class="ri-file-word-line"></i>
+              </div>
+              <div class="file-info">
+                <div class="file-name">2023年5月HSK五级模拟题.docx</div>
+                <div class="file-meta">
+                  <div class="file-size">
+                    <i class="ri-file-list-line"></i>
+                    <span>1.8MB</span>
+                  </div>
+                  <div class="file-date">
+                    <i class="ri-time-line"></i>
+                    <span>上传于 2023-05-20</span>
+                  </div>
+                  <span class="upload-status status-success">已解析</span>
+                </div>
+                <div class="progress-container">
+                  <div class="progress-bar" style="width: 100%;"></div>
+                </div>
+              </div>
+              <div class="file-actions">
+                <button class="file-action" title="查看详情">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="file-action" title="下载文件">
+                  <i class="ri-download-line"></i>
+                </button>
+                <button class="file-action" title="删除文件">
+                  <i class="ri-delete-bin-line"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="file-item">
+              <div class="file-icon">
+                <i class="ri-file-pdf-line"></i>
+              </div>
+              <div class="file-info">
+                <div class="file-name">大学英语四级练习题.pdf</div>
+                <div class="file-meta">
+                  <div class="file-size">
+                    <i class="ri-file-list-line"></i>
+                    <span>3.1MB</span>
+                  </div>
+                  <div class="file-date">
+                    <i class="ri-time-line"></i>
+                    <span>上传于 2023-04-10</span>
+                  </div>
+                  <span class="upload-status status-success">已解析</span>
+                </div>
+                <div class="progress-container">
+                  <div class="progress-bar" style="width: 100%;"></div>
+                </div>
+              </div>
+              <div class="file-actions">
+                <button class="file-action" title="查看详情">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="file-action" title="下载文件">
+                  <i class="ri-download-line"></i>
+                </button>
+                <button class="file-action" title="删除文件">
+                  <i class="ri-delete-bin-line"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 移动端遮罩层 -->
+  <div class="sidebar-overlay" id="sidebarOverlay" style="display: none;"></div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 侧边栏切换
+      const menuToggle = document.getElementById('menuToggle');
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+      
+      if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+          sidebar.classList.toggle('show');
+          if (sidebar.classList.contains('show')) {
+            sidebarOverlay.style.display = 'block';
+          } else {
+            sidebarOverlay.style.display = 'none';
+          }
+        });
+      }
+      
+      if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', function() {
+          sidebar.classList.remove('show');
+          this.style.display = 'none';
+        });
+      }
+      
+      // 上传区域交互
+      const uploadArea = document.getElementById('upload-area');
+      const fileInput = document.getElementById('file-upload');
+      
+      // 点击上传区域触发文件选择
+      uploadArea.addEventListener('click', function(e) {
+        if (e.target !== fileInput) {
+          fileInput.click();
+        }
+      });
+      
+      // 处理拖拽事件
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      // 高亮拖拽区域
+      ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, highlight, false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+      });
+      
+      function highlight() {
+        uploadArea.classList.add('drag-over');
+      }
+      
+      function unhighlight() {
+        uploadArea.classList.remove('drag-over');
+      }
+      
+      // 处理文件拖放
+      uploadArea.addEventListener('drop', handleDrop, false);
+      
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        handleFiles(files);
+      }
+      
+      // 文件选择事件
+      fileInput.addEventListener('change', function() {
+        handleFiles(this.files);
+      });
+      
+      // 处理选择的文件
+      function handleFiles(files) {
+        if (files.length === 0) return;
+        
+        // 验证文件类型和大小
+        const file = files[0]; // 只处理第一个文件
+        const validTypes = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png'];
+        const maxSize = 20 * 1024 * 1024; // 20MB
+        
+        // 简单的文件类型验证
+        const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+        if (!validTypes.includes(fileExt)) {
+          showToast('文件类型不支持，请上传PDF、Word或图片文件', 'error');
+          return;
+        }
+        
+        // 文件大小验证
+        if (file.size > maxSize) {
+          showToast('文件过大，请上传小于20MB的文件', 'error');
+          return;
+        }
+        
+        // 显示文件名到表单
+        document.getElementById('paper-name').value = file.name.replace(/\.[^/.]+$/, "");
+        
+        // 显示上传成功提示
+        showToast('文件已选择，请填写其他信息并点击上传', 'success');
+      }
+      
+      // 表单提交
+      const uploadForm = document.getElementById('upload-form');
+      
+      uploadForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // 表单验证
+        const paperName = document.getElementById('paper-name').value;
+        const subject = document.getElementById('subject-select').value;
+        const paperType = document.getElementById('paper-type').value;
+        
+        if (!paperName) {
+          showToast('请输入试卷名称', 'error');
+          return;
+        }
+        
+        if (!subject) {
+          showToast('请选择学科', 'error');
+          return;
+        }
+        
+        if (!paperType) {
+          showToast('请选择试卷类型', 'error');
+          return;
+        }
+        
+        if (!fileInput.files.length) {
+          showToast('请选择要上传的文件', 'error');
+          return;
+        }
+        
+        // 模拟上传过程
+        showToast('开始上传文件...', 'processing');
+        
+        // 这里应该是上传逻辑
+        // 模拟上传耗时
+        setTimeout(function() {
+          showToast('文件上传成功，正在进行AI解析...', 'processing');
+          
+          // 模拟解析耗时
+          setTimeout(function() {
+            showToast('AI解析完成！已添加到题库', 'success');
+            
+            // 重置表单
+            uploadForm.reset();
+          }, 2000);
+        }, 2000);
+      });
+      
+      // 取消按钮
+      const cancelBtn = document.getElementById('cancel-btn');
+      
+      cancelBtn.addEventListener('click', function() {
+        uploadForm.reset();
+        showToast('已取消上传', 'processing');
+      });
+      
+      // 文件操作按钮
+      const fileActions = document.querySelectorAll('.file-action');
+      
+      fileActions.forEach(button => {
+        button.addEventListener('click', function() {
+          const action = this.getAttribute('title');
+          const fileName = this.closest('.file-item').querySelector('.file-name').textContent;
+          
+          if (action === '删除文件') {
+            if (confirm(`确定要删除 ${fileName} 吗？`)) {
+              this.closest('.file-item').remove();
+              showToast(`已删除: ${fileName}`, 'success');
+            }
+          } else if (action === '查看详情') {
+            showToast(`查看详情: ${fileName}`, 'processing');
+          } else if (action === '下载文件') {
+            showToast(`开始下载: ${fileName}`, 'processing');
+          }
+        });
+      });
+    });
+    
+    // Toast提示功能
+    function showToast(message, type = 'success') {
+      // 检查是否已存在toast
+      let toast = document.querySelector('.toast');
+      
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+      }
+      
+      // 设置类型样式
+      toast.className = 'toast';
+      if (type === 'success') {
+        toast.style.backgroundColor = '#10b981';
+      } else if (type === 'error') {
+        toast.style.backgroundColor = '#ef4444';
+      } else if (type === 'processing') {
+        toast.style.backgroundColor = '#4f46e5';
+      }
+      
+      // 设置消息
+      toast.textContent = message;
+      
+      // 显示toast
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(100%)';
+      
+      setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+      }, 10);
+      
+      // 自动隐藏
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(100%)';
+        
+        setTimeout(() => {
+          if (toast.style.opacity === '0') {
+            toast.remove();
+          }
+        }, 300);
+      }, 3000);
+    }
+  </script>
+  
+  <style>
+    /* Toast样式 */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      background-color: var(--text-primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      opacity: 0;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    
+    /* 侧边栏遮罩层 */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.3);
+      z-index: 5;
+    }
+    
+    .menu-toggle {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+    }
+  </style>
+</body>
+</html> 

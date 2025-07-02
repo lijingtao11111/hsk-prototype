@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浙江财经大学智能考试系统 - HSK四级</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css">
+  <style>
+    .hero-section {
+      background-color: #4f46e5;
+      color: white;
+      padding: 3rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-pattern {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .subject-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .subject-icon-large {
+      width: 80px;
+      height: 80px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1.5rem;
+    }
+    
+    .subject-icon-large i {
+      font-size: 2.5rem;
+      color: white;
+    }
+    
+    .practice-card {
+      display: block;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all 0.2s;
+    }
+    
+    .practice-card:hover .practice-card-inner {
+      border-color: #d1d5db;
+      transform: translateY(-2px);
+    }
+    
+    .practice-card-inner {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      height: 100%;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+    }
+    
+    .practice-icon {
+      width: 48px;
+      height: 48px;
+      background-color: rgba(79, 70, 229, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .practice-content {
+      flex: 1;
+    }
+    
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    
+    .stat-card {
+      background-color: white;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .section-divider {
+      margin: 3rem 0;
+      border-top: 1px solid var(--border);
+    }
+    
+    @media (max-width: 768px) {
+      .subject-info {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .subject-icon-large {
+        margin-right: 0;
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="home.html" class="navbar-brand">智能考试系统</a>
+      
+      <ul class="navbar-menu">
+        <li class="navbar-item"><a href="home.html" class="navbar-link">首页</a></li>
+        <li class="navbar-item"><a href="subjects.html" class="navbar-link">学科选择</a></li>
+        <li class="navbar-item"><a href="wrong-questions.html" class="navbar-link">错题本</a></li>
+        <li class="navbar-item"><a href="profile.html" class="navbar-link">个人中心</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- 学科英雄区 -->
+  <section class="hero-section">
+    <div class="hero-pattern"></div>
+    
+    <div class="container hero-content">
+      <div class="subject-info">
+        <div class="subject-icon-large">
+          <i class="ri-translate"></i>
+        </div>
+        
+        <div>
+          <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">HSK四级</h1>
+          <p style="opacity: 0.9; font-size: 1.125rem;">汉语水平考试四级备考练习</p>
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="practice.html?subject=hsk4&mode=quick" class="btn btn-primary" style="display: inline-flex; align-items: center;">
+          <i class="ri-rocket-line" style="margin-right: 0.5rem;"></i>
+          快速练习
+        </a>
+        
+        <a href="#practice-modes" class="btn btn-outline" style="background: rgba(255, 255, 255, 0.2); color: white; border-color: rgba(255, 255, 255, 0.3); display: inline-flex; align-items: center;">
+          <i class="ri-list-check" style="margin-right: 0.5rem;"></i>
+          浏览练习模式
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- 学科统计 -->
+  <section class="container" style="padding-top: 2rem;">
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-number">85%</div>
+        <div style="color: var(--text-secondary);">知识点掌握率</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-number">2500+</div>
+        <div style="color: var(--text-secondary);">题目数量</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-number">15</div>
+        <div style="color: var(--text-secondary);">已练习次数</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-number">80%</div>
+        <div style="color: var(--text-secondary);">平均正确率</div>
+      </div>
+    </div>
+    
+    <div class="section-divider"></div>
+    
+    <!-- 练习模式 -->
+    <div id="practice-modes">
+      <h2 class="section-title">
+        <i class="ri-book-mark-line"></i>
+        <span>练习模式</span>
+      </h2>
+      
+      <div class="row" style="margin-bottom: 2rem;">
+        <div class="col">
+          <a href="practice.html?subject=hsk4&mode=real_exam" class="practice-card">
+            <div class="practice-card-inner">
+              <div class="practice-icon">
+                <i class="ri-file-list-3-line"></i>
+              </div>
+              
+              <div class="practice-content">
+                <h3 style="font-weight: 600; margin-bottom: 0.25rem;">真题练习</h3>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                  历年HSK四级真题，模拟考试环境
+                </p>
+              </div>
+              
+              <i class="ri-arrow-right-s-line" style="color: var(--text-secondary); font-size: 1.5rem; margin-left: 1rem;"></i>
+            </div>
+          </a>
+        </div>
+        
+        <div class="col">
+          <a href="practice.html?subject=hsk4&mode=knowledge" class="practice-card">
+            <div class="practice-card-inner">
+              <div class="practice-icon">
+                <i class="ri-mental-health-line"></i>
+              </div>
+              
+              <div class="practice-content">
+                <h3 style="font-weight: 600; margin-bottom: 0.25rem;">知识点练习</h3>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                  按照知识点分类进行练习
+                </p>
+              </div>
+              
+              <i class="ri-arrow-right-s-line" style="color: var(--text-secondary); font-size: 1.5rem; margin-left: 1rem;"></i>
+            </div>
+          </a>
+        </div>
+      </div>
+      
+      <div class="row" style="margin-bottom: 2rem;">
+        <div class="col">
+          <a href="practice.html?subject=hsk4&mode=mock_exam" class="practice-card">
+            <div class="practice-card-inner">
+              <div class="practice-icon">
+                <i class="ri-timer-line"></i>
+              </div>
+              
+              <div class="practice-content">
+                <h3 style="font-weight: 600; margin-bottom: 0.25rem;">模拟考试</h3>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                  完整模拟HSK四级考试流程，限时作答
+                </p>
+              </div>
+              
+              <i class="ri-arrow-right-s-line" style="color: var(--text-secondary); font-size: 1.5rem; margin-left: 1rem;"></i>
+            </div>
+          </a>
+        </div>
+        
+        <div class="col">
+          <a href="practice.html?subject=hsk4&mode=ai_recommend" class="practice-card">
+            <div class="practice-card-inner">
+              <div class="practice-icon">
+                <i class="ri-robot-line"></i>
+              </div>
+              
+              <div class="practice-content">
+                <h3 style="font-weight: 600; margin-bottom: 0.25rem;">AI智能推荐</h3>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                  基于你的薄弱环节，AI智能推荐练习题
+                </p>
+              </div>
+              
+              <i class="ri-arrow-right-s-line" style="color: var(--text-secondary); font-size: 1.5rem; margin-left: 1rem;"></i>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section-divider"></div>
+    
+    <!-- 薄弱知识点 -->
+    <div>
+      <h2 class="section-title">
+        <i class="ri-error-warning-line"></i>
+        <span>薄弱知识点</span>
+      </h2>
+      
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <h3 style="font-weight: 600; margin-bottom: 1rem;">近期错题分析</h3>
+            
+            <div style="margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>动词补语</span>
+                <span>65% 掌握</span>
+              </div>
+              <div class="progress-container">
+                <div class="progress-bar" style="width: 65%;"></div>
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>离合词用法</span>
+                <span>45% 掌握</span>
+              </div>
+              <div class="progress-container">
+                <div class="progress-bar" style="width: 45%;"></div>
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>复句连接词</span>
+                <span>58% 掌握</span>
+              </div>
+              <div class="progress-container">
+                <div class="progress-bar" style="width: 58%;"></div>
+              </div>
+            </div>
+            
+            <a href="wrong-questions.html?subject=hsk4" class="btn btn-outline w-full">查看完整错题分析</a>
+          </div>
+        </div>
+        
+        <div class="col">
+          <div class="card">
+            <h3 style="font-weight: 600; margin-bottom: 1rem;">AI学习建议</h3>
+            
+            <p style="margin-bottom: 1rem; color: var(--text-secondary);">基于你的学习情况，AI助手建议你重点关注以下内容：</p>
+            
+            <ul style="list-style: none; padding: 0;">
+              <li style="display: flex; align-items: center; margin-bottom: 1rem;">
+                <i class="ri-checkbox-circle-line" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                <span>加强离合词的词汇积累和用法练习</span>
+              </li>
+              <li style="display: flex; align-items: center; margin-bottom: 1rem;">
+                <i class="ri-checkbox-circle-line" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                <span>复习具有方向性的补语结构</span>
+              </li>
+              <li style="display: flex; align-items: center; margin-bottom: 1rem;">
+                <i class="ri-checkbox-circle-line" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                <span>练习复句类型辨别和连接词选择</span>
+              </li>
+            </ul>
+            
+            <a href="practice.html?subject=hsk4&mode=weakness" class="btn btn-primary w-full">针对性练习</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- 移动端底部导航 -->
+  <nav class="mobile-navbar">
+    <ul class="mobile-navbar-menu">
+      <li class="mobile-navbar-item">
+        <a href="home.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-home-4-line"></i>
+          <span>首页</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="subjects.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-book-open-line"></i>
+          <span>学科</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="practice.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-edit-line"></i>
+          <span>练习</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="wrong-questions.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-error-warning-line"></i>
+          <span>错题</span>
+        </a>
+      </li>
+      <li class="mobile-navbar-item">
+        <a href="profile.html" class="mobile-navbar-link">
+          <i class="mobile-navbar-icon ri-user-line"></i>
+          <span>我的</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+  <script src="js/app.js"></script>
+  <script>
+    // 页面加载时从URL获取学科ID
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const subjectId = urlParams.get('subject');
+      
+      // 这里可以根据subjectId动态加载不同学科的数据
+      // 当前演示使用的是静态HSK4数据
+    });
+  </script>
+</body>
+</html> 
