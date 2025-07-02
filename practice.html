@@ -225,6 +225,43 @@
       display: flex;
       gap: var(--spacing-2);
     }
+    
+    /* 移动端适配修复 */
+    @media (max-width: 768px) {
+      /* 确保内容不被底部导航栏遮挡 */
+      .practice-content {
+        padding-bottom: 120px !important;
+      }
+      
+      /* 优化题目选项在移动端的显示 */
+      .question-option {
+        padding: 0.75rem;
+      }
+      
+      .question-option-letter {
+        min-width: 28px;
+        height: 28px;
+        margin-right: 0.5rem;
+      }
+      
+      /* 确保导航可以滚动 */
+      .question-navigation {
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.5rem;
+      }
+      
+      /* 优化填空题在移动端的显示 */
+      .fill-blank-input {
+        width: 100%;
+        font-size: 16px; /* 防止iOS缩放 */
+      }
+      
+      /* 确保底部导航栏固定 */
+      .practice-footer {
+        bottom: 0;
+        z-index: 1000;
+      }
+    }
   </style>
 </head>
 <body>

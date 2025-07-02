@@ -211,6 +211,29 @@
     .progress-container {
       margin-bottom: var(--spacing-4);
     }
+    
+    /* 移动端适配修复 */
+    @media (max-width: 768px) {
+      /* 确保底部有足够的间距避免被tabbar遮挡 */
+      .min-h-screen {
+        padding-bottom: initial !important;
+      }
+      
+      /* 只对内容区域添加padding */
+      .feature-grid {
+        padding-bottom: 80px !important;
+        margin-bottom: 0 !important;
+      }
+      
+      /* 修复tab栏在移动端的显示 */
+      .mobile-navbar-link.active {
+        color: var(--primary);
+      }
+      
+      .mobile-navbar-link.active .mobile-navbar-icon {
+        color: var(--primary);
+      }
+    }
   </style>
 </head>
 <body>
@@ -389,5 +412,19 @@
   </nav>
   
   <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 处理移动端底部导航激活状态
+      const currentPath = window.location.pathname;
+      const filename = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+      
+      document.querySelectorAll('.mobile-navbar-link').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === filename) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html> 

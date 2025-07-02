@@ -628,6 +628,39 @@
         height: 3.5rem;
       }
     }
+    
+    /* 移动端适配修复 */
+    @media (max-width: 768px) {
+      /* 确保表单元素有足够的点击区域 */
+      .input-group {
+        margin-bottom: 1.5rem;
+      }
+      
+      .form-control {
+        height: 3.5rem;
+        font-size: 16px; /* 防止iOS缩放 */
+      }
+      
+      .login-options {
+        padding: 0.5rem 0;
+      }
+      
+      .login-options label, .login-options a {
+        padding: 0.5rem;
+        display: inline-block;
+      }
+      
+      .btn {
+        height: 3.5rem;
+        min-width: 44px; /* 确保符合可访问性要求 */
+      }
+      
+      /* 增强表单按钮的可点击性 */
+      .btn-primary {
+        width: 90% !important;
+        margin: 1rem auto !important;
+      }
+    }
   </style>
 </head>
 <body>

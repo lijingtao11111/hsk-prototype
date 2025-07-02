@@ -560,19 +560,13 @@
         </a>
       </li>
       <li class="mobile-navbar-item">
-        <a href="practice.html" class="mobile-navbar-link">
-          <i class="mobile-navbar-icon ri-edit-line"></i>
-          <span>练习</span>
-        </a>
-      </li>
-      <li class="mobile-navbar-item">
         <a href="wrong-questions.html" class="mobile-navbar-link">
           <i class="mobile-navbar-icon ri-error-warning-line"></i>
-          <span>错题</span>
+          <span>错题本</span>
         </a>
       </li>
       <li class="mobile-navbar-item">
-        <a href="profile.html" class="mobile-navbar-link">
+        <a href="profile.html" class="mobile-navbar-link active">
           <i class="mobile-navbar-icon ri-user-line"></i>
           <span>我的</span>
         </a>
@@ -599,7 +593,61 @@
           document.getElementById(tabId).classList.add('active');
         });
       });
+
+      // 处理移动端底部导航激活状态
+      const currentPath = window.location.pathname;
+      const filename = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+      
+      document.querySelectorAll('.mobile-navbar-link').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === filename) {
+          link.classList.add('active');
+        }
+      });
     });
   </script>
+
+<style>
+  /* 移动端适配修复 */
+  @media (max-width: 768px) {
+    /* 确保底部有足够的间距避免被tabbar遮挡 */
+    .container {
+      padding-bottom: initial !important;
+    }
+    
+    /* 只对内容区域添加padding */
+    .tab-content {
+      padding-bottom: 100px !important;
+    }
+    
+    /* 优化个人中心在移动端的显示 */
+    .profile-tabs {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 修复tab栏在移动端的显示 */
+    .mobile-navbar-link.active {
+      color: var(--primary);
+    }
+    
+    .mobile-navbar-link.active .mobile-navbar-icon {
+      color: var(--primary);
+    }
+    
+    /* 优化设置项在移动端的显示 */
+    .setting-item {
+      flex-wrap: wrap;
+    }
+    
+    .setting-action {
+      margin-left: 0;
+      margin-top: 0.5rem;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+</style>
 </body>
 </html> 

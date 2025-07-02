@@ -380,21 +380,15 @@
         </a>
       </li>
       <li class="mobile-navbar-item">
-        <a href="subjects.html" class="mobile-navbar-link">
+        <a href="subjects.html" class="mobile-navbar-link active">
           <i class="mobile-navbar-icon ri-book-open-line"></i>
           <span>学科</span>
         </a>
       </li>
       <li class="mobile-navbar-item">
-        <a href="practice.html" class="mobile-navbar-link">
-          <i class="mobile-navbar-icon ri-edit-line"></i>
-          <span>练习</span>
-        </a>
-      </li>
-      <li class="mobile-navbar-item">
         <a href="wrong-questions.html" class="mobile-navbar-link">
           <i class="mobile-navbar-icon ri-error-warning-line"></i>
-          <span>错题</span>
+          <span>错题本</span>
         </a>
       </li>
       <li class="mobile-navbar-item">
@@ -415,7 +409,54 @@
       
       // 这里可以根据subjectId动态加载不同学科的数据
       // 当前演示使用的是静态HSK4数据
+
+      // 处理移动端底部导航激活状态
+      const currentPath = window.location.pathname;
+      const filename = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+      
+      document.querySelectorAll('.mobile-navbar-link').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === filename) {
+          link.classList.add('active');
+        } else if (filename === 'subject-detail.html' && href === 'subjects.html') {
+          // 特殊情况：学科详情页应该激活"学科"标签
+          link.classList.add('active');
+        }
+      });
     });
   </script>
+
+<style>
+  /* 移动端适配修复 */
+  @media (max-width: 768px) {
+    /* 确保底部有足够的间距避免被tabbar遮挡 */
+    .container {
+      padding-bottom: initial !important;
+    }
+    
+    /* 只对内容区域添加padding */
+    #practice-modes {
+      padding-bottom: 100px !important;
+    }
+    
+    /* 修复tab栏在移动端的显示 */
+    .mobile-navbar-link.active {
+      color: var(--primary);
+    }
+    
+    .mobile-navbar-link.active .mobile-navbar-icon {
+      color: var(--primary);
+    }
+    
+    /* 优化学科详情页在移动端的显示 */
+    .practice-card-inner {
+      padding: 1rem;
+    }
+    
+    .stat-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
 </body>
 </html> 

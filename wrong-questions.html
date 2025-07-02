@@ -533,15 +533,9 @@
         </a>
       </li>
       <li class="mobile-navbar-item">
-        <a href="practice.html" class="mobile-navbar-link">
-          <i class="mobile-navbar-icon ri-edit-line"></i>
-          <span>练习</span>
-        </a>
-      </li>
-      <li class="mobile-navbar-item">
-        <a href="wrong-questions.html" class="mobile-navbar-link">
+        <a href="wrong-questions.html" class="mobile-navbar-link active">
           <i class="mobile-navbar-icon ri-error-warning-line"></i>
-          <span>错题</span>
+          <span>错题本</span>
         </a>
       </li>
       <li class="mobile-navbar-item">
@@ -567,7 +561,66 @@
           // 这里可以添加实际过滤逻辑
         });
       });
+
+      // 处理移动端底部导航激活状态
+      const currentPath = window.location.pathname;
+      const filename = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+      
+      document.querySelectorAll('.mobile-navbar-link').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === filename) {
+          link.classList.add('active');
+        }
+      });
     });
   </script>
+
+<style>
+  /* 移动端适配修复 */
+  @media (max-width: 768px) {
+    /* 确保底部有足够的间距避免被tabbar遮挡 */
+    .container {
+      padding-bottom: initial !important;
+    }
+    
+    /* 只对内容区域添加padding */
+    .wrong-question-list {
+      padding-bottom: 100px !important;
+    }
+    
+    /* 优化错题列表在移动端的宽度显示 */
+    .row {
+      flex-direction: column;
+    }
+    
+    .col {
+      width: 100% !important;
+      padding: 0;
+    }
+    
+    .question-stem {
+      word-break: break-word;
+    }
+    
+    /* 优化AI分析卡片在移动端的显示 */
+    .ai-insight-card {
+      margin-top: 1.5rem;
+    }
+    
+    /* 修复tab栏在移动端的显示 */
+    .mobile-navbar-link.active {
+      color: var(--primary);
+    }
+    
+    .mobile-navbar-link.active .mobile-navbar-icon {
+      color: var(--primary);
+    }
+    
+    /* 确保过滤标签可以滚动 */
+    .filter-tabs {
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+</style>
 </body>
 </html> 

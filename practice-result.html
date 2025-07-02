@@ -411,15 +411,9 @@
         </a>
       </li>
       <li class="mobile-navbar-item">
-        <a href="practice.html" class="mobile-navbar-link">
-          <i class="mobile-navbar-icon ri-edit-line"></i>
-          <span>练习</span>
-        </a>
-      </li>
-      <li class="mobile-navbar-item">
         <a href="wrong-questions.html" class="mobile-navbar-link">
           <i class="mobile-navbar-icon ri-error-warning-line"></i>
-          <span>错题</span>
+          <span>错题本</span>
         </a>
       </li>
       <li class="mobile-navbar-item">
@@ -432,5 +426,58 @@
   </nav>
   
   <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 处理移动端底部导航激活状态
+      const currentPath = window.location.pathname;
+      const filename = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+      
+      document.querySelectorAll('.mobile-navbar-link').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === filename) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+<style>
+  /* 移动端适配修复 */
+  @media (max-width: 768px) {
+    /* 确保底部有足够的间距避免被tabbar遮挡 */
+    .container {
+      padding-bottom: initial !important;
+    }
+    
+    /* 只对内容区域添加padding */
+    .result-card:last-child {
+      margin-bottom: 100px !important;
+    }
+    
+    /* 修复tab栏在移动端的显示 */
+    .mobile-navbar-link.active {
+      color: var(--primary);
+    }
+    
+    .mobile-navbar-link.active .mobile-navbar-icon {
+      color: var(--primary);
+    }
+    
+    /* 结果卡片在移动端的优化 */
+    .result-stats {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    .wrong-question {
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    /* 确保AI分析可以完整展示 */
+    .ai-analysis {
+      padding: 1.25rem 0.75rem 0.75rem 0.75rem;
+    }
+  }
+</style>
 </body>
 </html> 
