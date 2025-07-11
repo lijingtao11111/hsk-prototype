@@ -13,7 +13,6 @@ export default function ProfilePage() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // 检测是否为移动设备
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
