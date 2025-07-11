@@ -1,0 +1,314 @@
+/* 学科选择页面样式 */
+/* 关键尺寸控制 - 确保内容不会在刷新时变大 */
+.subjects-container {
+  max-width: 100%;
+  overflow-x: hidden;
+  font-size: 16px; /* 基准字体大小 */
+}
+
+.subjects-container .container {
+  max-width: 1280px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-6);
+  width: 100%;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-8);
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filter-button {
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-full);
+  background-color: var(--bg-white);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all var(--transition);
+  box-sizing: border-box;
+}
+
+.filter-button:hover {
+  background-color: var(--gray-100);
+  border-color: var(--gray-400);
+}
+
+.filter-button.active {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 200px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: var(--spacing-2) var(--spacing-4);
+  background-color: var(--bg-white);
+  transition: all var(--transition);
+  box-sizing: border-box;
+}
+
+.search-box:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.875rem;
+  padding: var(--spacing-1) 0;
+  box-sizing: border-box;
+}
+
+.search-box i {
+  color: var(--text-secondary);
+  margin-right: var(--spacing-2);
+}
+
+.subject-icon {
+  width: 64px;
+  height: 64px;
+  background-color: var(--primary-light);
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 1.75rem;
+  margin-bottom: var(--spacing-4);
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+/* 学科卡片相关样式 - 完全重写 */
+.subject-card {
+  display: block;
+  text-decoration: none !important;
+  color: var(--text-primary);
+  transition: all var(--transition);
+  box-sizing: border-box;
+  height: 100%;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  border-bottom: none !important;
+  outline: none !important;
+}
+
+.subject-card a,
+.subject-card * {
+  text-decoration: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  border-bottom: none !important;
+  outline: none !important;
+}
+
+.subject-card-inner {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  border: 1px solid var(--border-light);
+  transition: all var(--transition);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  outline: none !important;
+}
+
+.subject-card:hover .subject-card-inner {
+  /* 移除向上移动效果 */
+  transform: none;
+  border-color: var(--primary);
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  outline: none !important;
+}
+
+.subject-card:hover .subject-icon {
+  transform: scale(1.1);
+  background-color: var(--primary);
+  color: white;
+}
+
+.page-header {
+  margin-bottom: var(--spacing-8);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-2);
+  display: flex;
+  align-items: center;
+  line-height: 1.3;
+}
+
+.page-title i {
+  margin-right: var(--spacing-3);
+  font-size: 2rem;
+  color: var(--primary);
+}
+
+.page-description {
+  color: var(--text-secondary);
+  max-width: 600px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.subject-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-full);
+  margin-left: var(--spacing-2);
+}
+
+.subject-card-title {
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin: 0 0 var(--spacing-2) 0;
+  line-height: 1.4;
+}
+
+.subject-card-badge {
+  display: inline-block;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--spacing-3);
+}
+
+.subject-card-description {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: var(--spacing-4);
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.subject-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  width: 100%;
+}
+
+.subject-card-stats {
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+}
+
+.subject-card-stats span {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-left: var(--spacing-1);
+}
+
+.subject-card-action {
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  transition: all var(--transition);
+}
+
+.subject-card-action i {
+  margin-left: var(--spacing-1);
+  transition: transform var(--transition);
+}
+
+.subject-card:hover .subject-card-action i {
+  transform: translateX(3px);
+}
+
+.filter-buttons {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: 4px; /* 避免滚动条占用空间 */
+}
+
+@media (max-width: 768px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-box {
+    order: -1;
+    margin-bottom: var(--spacing-4);
+  }
+  
+  .filter-buttons {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: var(--spacing-2);
+    gap: var(--spacing-2);
+    width: 100%;
+  }
+  
+  .filter-button {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  /* 确保底部有足够的间距避免被tabbar遮挡 */
+  .container {
+    padding-bottom: calc(60px + var(--spacing-8)) !important;
+  }
+  
+  /* 控制页面标题大小 */
+  .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .page-description {
+    font-size: 0.875rem;
+  }
+} 

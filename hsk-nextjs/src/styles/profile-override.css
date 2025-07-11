@@ -1,0 +1,57 @@
+/* 个人中心页面移动端样式覆盖 */
+@media (max-width: 768px) {
+  /* 移动端头部样式 */
+  body .profile-header,
+  html body .profile-header,
+  .profile-header {
+    padding: 0.35rem 1rem !important;
+    min-height: auto !important;
+  }
+  
+  /* 移动端头像样式 */
+  body .avatar,
+  html body .avatar,
+  .avatar {
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    margin-right: 0.6rem !important;
+  }
+
+  /* 移动端标题样式 */
+  body .profile-content h1,
+  html body .profile-content h1,
+  .profile-content h1 {
+    font-size: 0.95rem !important;
+    margin-bottom: 0.15rem !important;
+  }
+  
+  /* 移动端副标题样式 */
+  body .profile-content p,
+  html body .profile-content p,
+  .profile-content p {
+    font-size: 0.7rem !important;
+    margin-bottom: 0.1rem !important;
+  }
+  
+  /* 移动端用户角色标签 */
+  body .user-role,
+  html body .user-role,
+  .user-role {
+    font-size: 0.65rem !important;
+    padding: 0.1rem 0.3rem !important;
+  }
+  
+  /* 移动端容器底部内边距 */
+  body .profile-container .container,
+  html body .profile-container .container,
+  .profile-container .container {
+    padding-bottom: 0 !important;
+  }
+  
+  /* 移动端标签内容底部内边距 */
+  body .profile-container .tab-content,
+  html body .profile-container .tab-content,
+  .profile-container .tab-content {
+    padding-bottom: 100px !important;
+  }
+}
