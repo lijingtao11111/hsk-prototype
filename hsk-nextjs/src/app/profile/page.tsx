@@ -30,7 +30,6 @@ export default function ProfilePage() {
     document.documentElement.style.setProperty('--role-font-size', '0.65rem');
     document.documentElement.style.setProperty('--role-padding', '0.1rem 0.3rem');
     
-    // 强制应用内联样式，确保关键元素尺寸一致
     const applyForcedStyles = () => {
       if (window.innerWidth <= 768) {
         // 添加强制样式到CSS
