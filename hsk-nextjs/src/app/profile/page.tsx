@@ -21,7 +21,6 @@ export default function ProfilePage() {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     
-    // 添加关键CSS变量确保尺寸一致
     document.documentElement.style.setProperty('--profile-header-padding', '0.35rem 1rem');
     document.documentElement.style.setProperty('--avatar-size', '2.2rem');
     document.documentElement.style.setProperty('--avatar-margin', '0.6rem');
