@@ -20,7 +20,6 @@ export default function ProfilePage() {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     
-    document.documentElement.style.setProperty('--profile-header-padding', '0.35rem 1rem');
     document.documentElement.style.setProperty('--avatar-size', '2.2rem');
     document.documentElement.style.setProperty('--avatar-margin', '0.6rem');
     document.documentElement.style.setProperty('--title-font-size', '0.95rem');
@@ -35,44 +34,6 @@ export default function ProfilePage() {
         // 添加强制样式到CSS
         const styleEl = document.createElement('style');
         styleEl.id = 'profile-forced-styles';
-        styleEl.textContent = `
-          @media (max-width: 768px) {
-            .profile-header {
-              padding: var(--profile-header-padding) !important;
-              min-height: auto !important;
-            }
-            
-            .avatar {
-              width: var(--avatar-size) !important;
-              height: var(--avatar-size) !important;
-              margin-right: var(--avatar-margin) !important;
-            }
-            
-            .profile-header h1 {
-              font-size: var(--title-font-size) !important;
-              margin-bottom: var(--title-margin) !important;
-            }
-            
-            .profile-header p {
-              font-size: var(--subtitle-font-size) !important;
-              margin-bottom: var(--subtitle-margin) !important;
-            }
-            
-            .profile-header .user-role {
-              font-size: var(--role-font-size) !important;
-              padding: var(--role-padding) !important;
-            }
-            
-            .profile-container .container {
-              padding-bottom: 0 !important;
-            }
-            
-            .tab-content {
-              padding-bottom: 100px !important;
-            }
-          }
-        `;
-        
         // 移除旧样式（如果存在）
         const oldStyle = document.getElementById('profile-forced-styles');
         if (oldStyle) {

@@ -115,7 +115,7 @@ export default function Navbar() {
 
         .navbar-container {
           justify-content: flex-start !important;
-          padding: 0 !important;
+          padding: 10px !important;
         }
         
         .navbar-brand {

@@ -126,7 +126,7 @@ export default function AdminLoginPage() {
           
           <div className="login-footer fadeIn delay-3">
             <div className="user-types">
-              <Link href="/home" className="user-type-link">返回首页</Link>
+              <Link href="/login" className="user-type-link">学生登录</Link>
               <span>|</span>
               <Link href="/teacher/login" className="user-type-link">教师登录</Link>
             </div>

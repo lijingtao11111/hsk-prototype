@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import '../../../styles/teacher-login.css';
+import '../../styles/login.css';
 
-export default function TeacherLoginPage() {
+export default function StudentLoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
 
   return (
@@ -21,9 +21,9 @@ export default function TeacherLoginPage() {
           </div>
           
           <div className="info-main">
-            <h1 className="info-title fadeIn">教师管理<br/>平台</h1>
+            <h1 className="info-title fadeIn">多专业智能<br/>考试练习系统</h1>
             <p className="info-description fadeIn delay-1">
-              为教师提供高效便捷的教学管理工具，支持题目审核、学生进度跟踪和智能教学辅助功能，让教学管理更加智能化。
+              基于AI技术驱动的智能考试系统，支持多专业多学科，集成浙江财经大学Agent平台AI能力进行试卷解析、错题分析和题目生成，为您的学习提供全方位的智能辅助。
             </p>
             
             <div className="info-features fadeIn delay-2">
@@ -32,28 +32,38 @@ export default function TeacherLoginPage() {
                   <i className="ri-file-list-3-line"></i>
                 </div>
                 <div className="feature-text">
-                  <div className="feature-title">题目审核</div>
-                  <div className="feature-description">审核AI生成的题目</div>
+                  <div className="feature-title">真题练习</div>
+                  <div className="feature-description">历年真题模拟训练</div>
                 </div>
               </div>
               
               <div className="info-feature">
                 <div className="feature-icon">
-                  <i className="ri-line-chart-line"></i>
+                  <i className="ri-error-warning-line"></i>
                 </div>
                 <div className="feature-text">
-                  <div className="feature-title">学生进度</div>
-                  <div className="feature-description">实时监控学习情况</div>
+                  <div className="feature-title">智能错题本</div>
+                  <div className="feature-description">AI分析薄弱知识点</div>
                 </div>
               </div>
               
               <div className="info-feature">
                 <div className="feature-icon">
-                  <i className="ri-upload-cloud-line"></i>
+                  <i className="ri-robot-line"></i>
                 </div>
                 <div className="feature-text">
-                  <div className="feature-title">试卷上传</div>
-                  <div className="feature-description">AI解析试卷内容</div>
+                  <div className="feature-title">AI题目生成</div>
+                  <div className="feature-description">个性化练习题定制</div>
+                </div>
+              </div>
+              
+              <div className="info-feature">
+                <div className="feature-icon">
+                  <i className="ri-bar-chart-grouped-line"></i>
+                </div>
+                <div className="feature-text">
+                  <div className="feature-title">学习分析</div>
+                  <div className="feature-description">详细数据统计报告</div>
                 </div>
               </div>
             </div>
@@ -62,7 +72,7 @@ export default function TeacherLoginPage() {
           <div className="info-footer fadeIn delay-3">
             <div>© 2023 浙江财经大学</div>
             <div className="footer-links">
-              <a href="#" className="footer-link">教师手册</a>
+              <a href="#" className="footer-link">关于我们</a>
               <a href="#" className="footer-link">使用帮助</a>
               <a href="#" className="footer-link">联系我们</a>
             </div>
@@ -74,19 +84,19 @@ export default function TeacherLoginPage() {
       <div className="login-form-container">
         <div className="login-form-wrapper">
           <div className="login-form-header fadeIn">
-            <h2 className="login-form-title">教师登录</h2>
-            <p className="login-form-subtitle">访问智能考试系统教师端</p>
+            <h2 className="login-form-title">欢迎使用</h2>
+            <p className="login-form-subtitle">请登录您的账号继续</p>
           </div>
           
-          <form action="/teacher/student-progress" className="fadeIn delay-1">
+          <form action="/home" className="fadeIn delay-1">
             <div className="input-group">
               <i className="input-icon ri-user-line"></i>
-              <input type="text" className="form-control" placeholder="请输入教师工号" />
+              <input type="text" className="form-control" placeholder="学号/工号" />
             </div>
             
             <div className="input-group">
               <i className="input-icon ri-lock-line"></i>
-              <input type="password" className="form-control" placeholder="请输入密码" />
+              <input type="password" className="form-control" placeholder="密码" />
             </div>
             
             <div className="login-options">
@@ -107,8 +117,9 @@ export default function TeacherLoginPage() {
           </form>
           
           <div className="login-footer fadeIn delay-3">
+            <div>其他身份登录</div>
             <div className="user-types">
-              <Link href="/login" className="user-type-link">学生登录</Link>
+              <Link href="/teacher/login" className="user-type-link">教师登录</Link>
               <span>|</span>
               <Link href="/admin/login" className="user-type-link">管理员登录</Link>
             </div>
@@ -117,4 +128,4 @@ export default function TeacherLoginPage() {
       </div>
     </div>
   );
-} 
+}
