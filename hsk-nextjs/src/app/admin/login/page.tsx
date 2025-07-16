@@ -5,7 +5,63 @@ import { useState } from 'react';
 import '../../../styles/admin-login.css';
 
 export default function AdminLoginPage() {
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // 清除错误信息
+    if (error) setError('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.username || !formData.password) {
+      setError('请输入用户名和密码');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // 保存token到localStorage
+        localStorage.setItem('admin-token', result.data.token);
+        localStorage.setItem('admin-user', JSON.stringify(result.data.user));
+
+        // 跳转到管理员首页
+        window.location.href = '/admin/index';
+      } else {
+        setError(result.error || '登录失败');
+      }
+    } catch (error) {
+      console.error('登录错误:', error);
+      setError('网络错误，请重试');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="login-container">
@@ -91,37 +147,69 @@ export default function AdminLoginPage() {
             <p className="login-form-subtitle">访问系统管理控制中心</p>
           </div>
           
-          <form action="/admin/index" className="fadeIn delay-1">
+          <form onSubmit={handleSubmit} className="fadeIn delay-1">
+            {error && (
+              <div className="error-message">
+                <i className="ri-error-warning-line"></i>
+                {error}
+              </div>
+            )}
+
             <div className="input-group">
               <i className="input-icon ri-user-line"></i>
-              <input type="text" className="form-control" placeholder="管理员账号" />
+              <input
+                type="text"
+                name="username"
+                className="form-control"
+                placeholder="管理员账号"
+                value={formData.username}
+                onChange={handleInputChange}
+                disabled={loading}
+              />
             </div>
-            
+
             <div className="input-group">
               <i className="input-icon ri-lock-line"></i>
-              <input type="password" className="form-control" placeholder="管理员密码" />
+              <input
+                type="password"
+                name="password"
+                className="form-control"
+                placeholder="管理员密码"
+                value={formData.password}
+                onChange={handleInputChange}
+                disabled={loading}
+              />
             </div>
-            
-            <div className="input-group">
-              <i className="input-icon ri-shield-keyhole-line"></i>
-              <input type="text" className="form-control" placeholder="安全验证码" />
-            </div>
-            
+
             <div className="login-options">
               <div className="remember-me">
-                <input 
-                  type="checkbox" 
-                  id="remember" 
+                <input
+                  type="checkbox"
+                  id="remember"
                   checked={rememberMe}
                   onChange={() => setRememberMe(!rememberMe)}
+                  disabled={loading}
                 />
                 <label htmlFor="remember">记住我</label>
               </div>
-              
+
               <a href="#" className="forgot-password">忘记密码?</a>
             </div>
-            
-            <button type="submit" className="btn btn-primary fadeIn delay-2">安全登录</button>
+
+            <button
+              type="submit"
+              className="btn btn-primary fadeIn delay-2"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <i className="ri-loader-4-line loading-icon"></i>
+                  登录中...
+                </>
+              ) : (
+                '安全登录'
+              )}
+            </button>
           </form>
           
           <div className="login-footer fadeIn delay-3">

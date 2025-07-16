@@ -3,6 +3,143 @@
 /* 导入基础样式 */
 @import url('./admin-user-management.css');
 
+/* 设置页面布局 */
+.settings-layout {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* 设置导航 */
+.settings-nav {
+  width: 240px;
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border);
+  padding: 1rem 0;
+  height: fit-content;
+}
+
+.settings-nav-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-secondary);
+}
+
+.settings-nav-item:hover {
+  background-color: var(--background);
+  color: var(--text-primary);
+}
+
+.settings-nav-item.active {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border-right: 3px solid var(--primary);
+}
+
+.settings-nav-icon {
+  margin-right: 0.75rem;
+  font-size: 1.125rem;
+}
+
+/* 设置内容 */
+.settings-content {
+  flex: 1;
+}
+
+/* 配置项样式 */
+.config-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.config-item:last-child {
+  border-bottom: none;
+}
+
+.config-info {
+  flex: 1;
+  margin-right: 2rem;
+}
+
+.config-name {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.config-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.config-control {
+  min-width: 200px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-secondary);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* 顶部操作栏 */
+.topbar-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* 成功提示增强 */
+.success-tip {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: var(--success);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.success-tip.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.success-tip i {
+  font-size: 1.125rem;
+}
+
 /* 表单行和列布局 */
 .form-row {
   display: flex;

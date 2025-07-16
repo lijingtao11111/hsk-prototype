@@ -1,7 +1,1 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/admin/index/page": "app/admin/index/page.js",
-  "/admin/user-management/page": "app/admin/user-management/page.js",
-  "/admin/subject-management/page": "app/admin/subject-management/page.js",
-  "/admin/question-bank/page": "app/admin/question-bank/page.js"
-}
+{}

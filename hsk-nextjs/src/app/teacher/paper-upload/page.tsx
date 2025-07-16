@@ -84,9 +84,56 @@ export default function PaperUploadPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData, uploadedFiles);
+
+    if (uploadedFiles.length === 0) {
+      alert('请先上传文件');
+      return;
+    }
+
+    try {
+      const formDataToSend = new FormData();
+
+      // 添加文件
+      uploadedFiles.forEach(fileItem => {
+        formDataToSend.append('files', fileItem.file);
+      });
+
+      // 添加处理方式和考试信息
+      formDataToSend.append('processingType', formData.autoParse ? 'auto' : 'manual');
+      formDataToSend.append('examInfo', JSON.stringify({
+        name: formData.paperName,
+        subjectName: formData.subject,
+        description: formData.description
+      }));
+
+      const response = await fetch('/api/teacher/upload', {
+        method: 'POST',
+        body: formDataToSend
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert('试卷上传成功！');
+        // 重置表单
+        setUploadedFiles([]);
+        setFormData({
+          paperName: '',
+          subject: '',
+          paperType: '',
+          description: '',
+          autoParse: true,
+          autoTag: true
+        });
+      } else {
+        alert('上传失败: ' + result.error);
+      }
+    } catch (error) {
+      console.error('上传失败:', error);
+      alert('上传失败');
+    }
   };
 
   const handleUploadAreaClick = () => {

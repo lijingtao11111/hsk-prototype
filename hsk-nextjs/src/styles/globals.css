@@ -531,6 +531,7 @@ body {
   background: transparent;
   font-size: 0.875rem;
   padding: var(--spacing-1) 0;
+  margin-left: 20px;
 }
 
 .search-box i {

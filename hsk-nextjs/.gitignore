@@ -40,3 +40,5 @@ docSite/.vercel
 /.history/*
 
 .idea/
+
+/generated/prisma
