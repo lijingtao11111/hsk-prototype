@@ -1,9 +1,10 @@
 {
   "pages": {
-    "/page": [
+    "/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
+      "static/css/app/login/page.css",
+      "static/chunks/app/login/page.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -16,18 +17,6 @@
       "static/chunks/main-app.js",
       "static/css/app/admin/login/page.css",
       "static/chunks/app/admin/login/page.js"
-    ],
-    "/login/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/login/page.css",
-      "static/chunks/app/login/page.js"
-    ],
-    "/teacher/login/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/teacher/login/page.css",
-      "static/chunks/app/teacher/login/page.js"
     ],
     "/admin/index/page": [
       "static/chunks/webpack.js",
@@ -52,6 +41,11 @@
       "static/chunks/main-app.js",
       "static/css/app/admin/question-bank/page.css",
       "static/chunks/app/admin/question-bank/page.js"
+    ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",

@@ -38,7 +38,7 @@ export async function GET(request: Request) {
         }
       },
       orderBy: {
-        createdAt: 'desc'
+        id: 'desc'
       }
     })
 
@@ -59,13 +59,13 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { title, content, type, difficulty, options, answer, explanation, subjectId } = body
+    const { subjectId } = body
 
     // 验证必填字段
-    if (!title || !content || !type || !answer || !subjectId) {
+    if (!subjectId) {
       return NextResponse.json({
         success: false,
-        message: '题目标题、内容、类型、答案和学科不能为空'
+        message: '学科不能为空'
       }, { status: 400 })
     }
 
@@ -81,16 +81,11 @@ export async function POST(request: Request) {
       }, { status: 400 })
     }
 
-    // 创建题目
+    // 创建题目 - 使用数据库实际字段
     const newQuestion = await prisma.question.create({
       data: {
-        title,
-        content,
-        type,
-        difficulty: difficulty || 1,
-        options: options ? JSON.stringify(options) : null,
-        answer,
-        explanation: explanation || '',
+        stem: '新题目', // 提供默认的题干内容
+        answer: 'A', // 提供默认答案
         subjectId: parseInt(subjectId)
       },
       include: {

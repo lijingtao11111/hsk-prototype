@@ -101,3 +101,14 @@
     white-space: nowrap;
   }
 }
+
+/* 类别标签样式 */
+.category-tag {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background-color: #f0f0f0;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  color: #666;
+  border: 1px solid #e0e0e0;
+}

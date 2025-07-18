@@ -1,6 +1,6 @@
 {
-  "/admin/question-bank/page": "app/admin/question-bank/page.js",
-  "/admin/user-management/page": "app/admin/user-management/page.js",
-  "/admin/index/page": "app/admin/index/page.js",
-  "/api/admin/dashboard/route": "app/api/admin/dashboard/route.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/login/page": "app/admin/login/page.js",
+  "/page": "app/page.js",
+  "/admin/question-bank/page": "app/admin/question-bank/page.js"
 }

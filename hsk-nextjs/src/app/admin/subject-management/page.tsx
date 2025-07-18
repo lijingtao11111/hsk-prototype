@@ -187,7 +187,8 @@ export default function SubjectManagementPage() {
                          subject.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (subject.description && subject.description.toLowerCase().includes(searchTerm.toLowerCase()))
 
-    const matchesCategory = categoryFilter === 'all' || subject.category === categoryFilter
+    // 临时处理：由于数据库中没有category字段，所有学科都归为"其他"类别
+    const matchesCategory = categoryFilter === 'all' || categoryFilter === 'other'
 
     const matchesStatus = statusFilter === 'all' ||
                          (statusFilter === 'active' ? subject.isActive : !subject.isActive)
@@ -230,11 +231,8 @@ export default function SubjectManagementPage() {
                   className="filter-select"
                 >
                   <option value="all">全部分类</option>
-                  <option value="language">语言类</option>
-                  <option value="math">数学类</option>
-                  <option value="science">理科类</option>
-                  <option value="liberal">文科类</option>
-                  <option value="computer">计算机类</option>
+                  <option value="other">其他</option>
+                  {/* 暂时移除其他分类选项，因为数据库中没有category字段 */}
                 </select>
               </div>
 
@@ -303,7 +301,10 @@ export default function SubjectManagementPage() {
                             </div>
                           </div>
                         </td>
-                        <td>{subject.category || '未分类'}</td>
+                        <td>
+                          {/* 临时显示固定值，因为数据库中暂时没有category字段 */}
+                          <span className="category-tag">其他</span>
+                        </td>
                         <td>
                           <span className="question-count">
                             {subject._count?.questions || 0} 道题目
@@ -395,6 +396,8 @@ export default function SubjectManagementPage() {
                       </div>
                     </div>
 
+                    {/* 暂时隐藏分类字段，因为API不支持category字段 */}
+                    {/*
                     <div className="form-group">
                       <label htmlFor="category" className="form-label">学科分类</label>
                       <select
@@ -412,6 +415,7 @@ export default function SubjectManagementPage() {
                         <option value="其他">其他</option>
                       </select>
                     </div>
+                    */}
 
                     <div className="form-group">
                       <label htmlFor="description" className="form-label">学科描述</label>

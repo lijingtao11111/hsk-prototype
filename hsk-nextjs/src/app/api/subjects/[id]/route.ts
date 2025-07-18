@@ -55,7 +55,7 @@ export async function PUT(
   try {
     const id = parseInt(params.id)
     const body = await request.json()
-    const { name, code, description, category, isActive } = body
+    const { name, code, description } = body
 
     if (isNaN(id)) {
       return NextResponse.json({
@@ -104,9 +104,8 @@ export async function PUT(
       data: {
         name,
         code,
-        description: description || '',
-        category: category || '其他',
-        isActive: isActive !== undefined ? isActive : true
+        description: description || ''
+        // 暂时移除category和isActive字段，因为数据库表中不存在
       },
       include: {
         _count: {

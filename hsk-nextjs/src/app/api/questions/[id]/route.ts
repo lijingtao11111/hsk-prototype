@@ -57,7 +57,7 @@ export async function PUT(
   try {
     const id = parseInt(params.id)
     const body = await request.json()
-    const { title, content, type, difficulty, options, answer, explanation, subjectId } = body
+    const { title, answer, subjectId } = body // 只提取实际存在的字段
 
     if (isNaN(id)) {
       return NextResponse.json({
@@ -66,11 +66,11 @@ export async function PUT(
       }, { status: 400 })
     }
 
-    // 验证必填字段
-    if (!title || !content || !type || !answer || !subjectId) {
+    // 验证必填字段 - 只验证实际存在的字段
+    if (!answer || !subjectId) {
       return NextResponse.json({
         success: false,
-        message: '题目标题、内容、类型、答案和学科不能为空'
+        message: '答案和学科不能为空'
       }, { status: 400 })
     }
 
@@ -98,18 +98,14 @@ export async function PUT(
       }, { status: 400 })
     }
 
-    // 更新题目
+    // 更新题目 - 只更新实际存在的字段
     const updatedQuestion = await prisma.question.update({
       where: { id },
       data: {
-        title,
-        content,
-        type,
-        difficulty: difficulty || 1,
-        options: options ? JSON.stringify(options) : null,
+        stem: title || '题目', // 将title映射到stem字段
         answer,
-        explanation: explanation || '',
         subjectId: parseInt(subjectId)
+        // 移除不存在的字段：content, type, difficulty, options, explanation
       },
       include: {
         subject: {

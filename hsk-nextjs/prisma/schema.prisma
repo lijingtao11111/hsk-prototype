@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -36,14 +36,15 @@ model User {
 
 // 学科表
 model Subject {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  code        String   @unique
-  description String?
-  category    String?
-  isActive    Boolean  @default(true) @map("is_active")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id            Int      @id @default(autoincrement())
+  name          String   @unique
+  code          String   @unique
+  description   String?
+  createdById   Int      @map("created_by_id")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  // 暂时移除其他字段映射
+  // isActive    Boolean  @default(true) @map("is_active")
+  // createdAt   DateTime @default(now()) @map("created_at")
   
   // 关联关系
   questions   Question[]
@@ -51,24 +52,17 @@ model Subject {
   @@map("subjects")
 }
 
-// 题目表
+// 题目表 - 根据数据库实际结构调整
 model Question {
   id          Int      @id @default(autoincrement())
-  title       String
-  content     String
-  type        QuestionType @default(SINGLE_CHOICE)
-  difficulty  Int      @default(1) // 1-5难度等级
-  options     String?  // JSON格式存储选项
-  answer      String   // 正确答案
-  explanation String?  // 解析
+  stem        String   // 题干字段（必填）
+  answer      String   // 答案字段（必填）
   subjectId   Int      @map("subject_id")
-  isActive    Boolean  @default(true) @map("is_active")
-  createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  
+
   // 关联关系
   subject     Subject  @relation(fields: [subjectId], references: [id])
-  
+
   @@map("questions")
 }
 

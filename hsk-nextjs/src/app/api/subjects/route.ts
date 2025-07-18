@@ -12,7 +12,7 @@ export async function GET() {
         }
       },
       orderBy: {
-        createdAt: 'desc'
+        id: 'desc'
       }
     })
 
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
         name,
         code,
         description: description || '',
-        category: category || '其他'
+        createdById: 1  // 暂时使用固定的用户ID，实际应该从认证中获取
       },
       include: {
         _count: {

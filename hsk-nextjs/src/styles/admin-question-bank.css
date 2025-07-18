@@ -204,3 +204,30 @@
     max-width: 150px;
   }
 }
+
+/* 操作按钮样式 */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn {
+  padding: 0.375rem;
+  border-radius: 0.375rem;
+  color: #666;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+}
+
+.action-btn:hover {
+  background-color: #f5f5f5;
+  color: #1976d2;
+}
