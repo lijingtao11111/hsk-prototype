@@ -33,8 +33,7 @@ interface Subject {
   code: string
 }
 
-
-export default function QuestionBankPage() {
+export default function QuestionManagementPage() {
   const [questions, setQuestions] = useState<Question[]>([])
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [loading, setLoading] = useState(true)
@@ -75,7 +74,7 @@ export default function QuestionBankPage() {
       setLoading(true)
       const response = await fetch('/api/questions')
       const result = await response.json()
-
+      
       if (result.success) {
         setQuestions(result.data || [])
       } else {
@@ -95,7 +94,7 @@ export default function QuestionBankPage() {
     try {
       const response = await fetch('/api/subjects')
       const result = await response.json()
-
+      
       if (result.success) {
         setSubjects(result.data || [])
       } else {
@@ -112,8 +111,6 @@ export default function QuestionBankPage() {
     fetchQuestions()
     fetchSubjects()
   }, [])
-
-
 
   // 处理表单输入
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -165,12 +162,10 @@ export default function QuestionBankPage() {
     setShowModal(true)
   }
 
-
-
   // 提交表单
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
+    
     if (!formData.title || !formData.content || !formData.answer || !formData.subjectId) {
       toast({
         title: "表单验证失败",
@@ -182,17 +177,17 @@ export default function QuestionBankPage() {
 
     try {
       setSubmitting(true)
-
+      
       const url = editingQuestion ? `/api/questions/${editingQuestion.id}` : '/api/questions'
       const method = editingQuestion ? 'PUT' : 'POST'
-
+      
       const submitData = {
         ...formData,
-        options: ['SINGLE_CHOICE', 'MULTIPLE_CHOICE', 'TRUE_FALSE'].includes(formData.type)
-          ? formData.options.filter(opt => opt.trim())
+        options: ['SINGLE_CHOICE', 'MULTIPLE_CHOICE', 'TRUE_FALSE'].includes(formData.type) 
+          ? formData.options.filter(opt => opt.trim()) 
           : null
       }
-
+      
       const response = await fetch(url, {
         method,
         headers: {
@@ -277,14 +272,14 @@ export default function QuestionBankPage() {
     const matchesSubject = subjectFilter === 'all' || question.subjectId.toString() === subjectFilter
     const matchesType = typeFilter === 'all' || question.type === typeFilter
     const matchesDifficulty = difficultyFilter === 'all' || question.difficulty.toString() === difficultyFilter
-
+    
     return matchesSearch && matchesSubject && matchesType && matchesDifficulty
   })
 
   return (
     <AdminAuthGuard>
       <div className="admin-layout">
-        <AdminSidebar currentPage="question-bank" />
+        <AdminSidebar currentPage="question-management" />
         
         <div className="main-content">
           <div className="topbar">
@@ -296,7 +291,8 @@ export default function QuestionBankPage() {
               </button>
             </div>
           </div>
-          
+
+          {/* 筛选区域 */}
           <div className="filter-area">
             <div className="search-box">
               <i className="ri-search-line search-icon"></i>
@@ -371,9 +367,10 @@ export default function QuestionBankPage() {
               </button>
             </div>
           </div>
-          
+
+          {/* 题目列表 */}
           <div className="card">
-            <div className="table-container">
+            <div className="card-content">
               <table className="data-table">
                 <thead>
                   <tr>
@@ -389,13 +386,13 @@ export default function QuestionBankPage() {
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td colSpan={7} style={{textAlign: 'center', padding: '2rem'}}>
+                      <td colSpan={7} style={{ textAlign: 'center', padding: '2rem' }}>
                         加载中...
                       </td>
                     </tr>
                   ) : filteredQuestions.length === 0 ? (
                     <tr>
-                      <td colSpan={7} style={{textAlign: 'center', padding: '2rem'}}>
+                      <td colSpan={7} style={{ textAlign: 'center', padding: '2rem' }}>
                         暂无题目数据
                       </td>
                     </tr>
@@ -407,9 +404,9 @@ export default function QuestionBankPage() {
                             <div className="user-avatar">{question.title.charAt(0)}</div>
                             <div className="user-details">
                               <div className="user-name">{question.title}</div>
-                              <div className="user-meta" style={{
-                                maxWidth: '300px',
-                                overflow: 'hidden',
+                              <div className="user-meta" style={{ 
+                                maxWidth: '300px', 
+                                overflow: 'hidden', 
                                 textOverflow: 'ellipsis',
                                 whiteSpace: 'nowrap'
                               }}>

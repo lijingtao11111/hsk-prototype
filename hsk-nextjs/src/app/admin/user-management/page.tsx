@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import AdminAuthGuard from '../../../components/AdminAuthGuard';
 import AdminSidebar from '../../../components/AdminSidebar';
 import '../../../styles/admin-user-management.css';
+import { useToast } from '../../../hooks/use-toast';
+import { useConfirmDialog } from '../../../components/ui/confirm-dialog';
 import '../../../styles/admin-filters.css';
 
 interface User {
@@ -46,6 +48,9 @@ export default function UserManagementPage() {
     major: ''
   });
 
+  const { toast } = useToast();
+  const { confirm, ConfirmDialog } = useConfirmDialog();
+
   // 获取用户列表
   const fetchUsers = async () => {
     try {
@@ -82,16 +87,28 @@ export default function UserManagementPage() {
       const result = await response.json();
 
       if (result.success) {
-        alert('用户创建成功');
+        toast({
+          title: "创建成功",
+          description: '用户创建成功',
+          variant: "success"
+        });
         setShowModal(false);
         resetForm();
         fetchUsers(); // 重新获取用户列表
       } else {
-        alert('创建失败: ' + result.message);
+        toast({
+          title: "创建失败",
+          description: result.message,
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('创建用户失败:', error);
-      alert('创建失败，请重试');
+      toast({
+        title: "创建失败",
+        description: '创建失败，请重试',
+        variant: "destructive"
+      });
     } finally {
       setSubmitting(false);
     }
@@ -112,17 +129,29 @@ export default function UserManagementPage() {
       const result = await response.json();
 
       if (result.success) {
-        alert('用户更新成功');
+        toast({
+          title: "更新成功",
+          description: '用户更新成功',
+          variant: "success"
+        });
         setShowModal(false);
         setEditingUser(null);
         resetForm();
         fetchUsers(); // 重新获取用户列表
       } else {
-        alert('更新失败: ' + result.message);
+        toast({
+          title: "更新失败",
+          description: result.message,
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('更新用户失败:', error);
-      alert('更新失败，请重试');
+      toast({
+        title: "更新失败",
+        description: '更新失败，请重试',
+        variant: "destructive"
+      });
     } finally {
       setSubmitting(false);
     }
@@ -130,27 +159,42 @@ export default function UserManagementPage() {
 
   // 删除用户
   const deleteUser = async (userId: number, userName: string) => {
-    if (!confirm(`确定要删除用户 "${userName}" 吗？此操作不可恢复。`)) {
-      return;
-    }
+    confirm({
+      title: '确认删除',
+      description: `确定要删除用户 "${userName}" 吗？此操作不可恢复。`,
+      variant: 'destructive',
+      onConfirm: async () => {
+        try {
+          const response = await fetch(`/api/users/${userId}`, {
+            method: 'DELETE',
+          });
 
-    try {
-      const response = await fetch(`/api/users/${userId}`, {
-        method: 'DELETE',
-      });
+          const result = await response.json();
 
-      const result = await response.json();
-
-      if (result.success) {
-        alert('用户删除成功');
-        fetchUsers(); // 重新获取用户列表
-      } else {
-        alert('删除失败: ' + result.message);
+          if (result.success) {
+            toast({
+              title: "删除成功",
+              description: '用户删除成功',
+              variant: "success"
+            });
+            fetchUsers(); // 重新获取用户列表
+          } else {
+            toast({
+              title: "删除失败",
+              description: result.message,
+              variant: "destructive"
+            });
+          }
+        } catch (error) {
+          console.error('删除用户失败:', error);
+          toast({
+            title: "删除失败",
+            description: '删除失败，请重试',
+            variant: "destructive"
+          });
+        }
       }
-    } catch (error) {
-      console.error('删除用户失败:', error);
-      alert('删除失败，请重试');
-    }
+    });
   };
 
   // 重置表单
@@ -208,12 +252,20 @@ export default function UserManagementPage() {
     e.preventDefault();
 
     if (!formData.username || !formData.realName) {
-      alert('用户名和真实姓名不能为空');
+      toast({
+        title: "表单验证失败",
+        description: "用户名和真实姓名不能为空",
+        variant: "destructive"
+      });
       return;
     }
 
     if (!editingUser && !formData.password) {
-      alert('新用户密码不能为空');
+      toast({
+        title: "表单验证失败",
+        description: "新用户密码不能为空",
+        variant: "destructive"
+      });
       return;
     }
 
@@ -626,6 +678,7 @@ export default function UserManagementPage() {
             </div>
           </div>
         )}
+        <ConfirmDialog />
       </div>
     </AdminAuthGuard>
   );

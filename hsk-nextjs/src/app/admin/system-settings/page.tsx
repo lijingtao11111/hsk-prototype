@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import AdminAuthGuard from '../../../components/AdminAuthGuard';
 import AdminSidebar from '../../../components/AdminSidebar';
 import '../../../styles/admin-system-settings.css';
+import { useToast } from '../../../hooks/use-toast';
+import { useConfirmDialog } from '../../../components/ui/confirm-dialog';
 
 export default function SystemSettingsPage() {
   const [configs, setConfigs] = useState({});
@@ -13,6 +15,9 @@ export default function SystemSettingsPage() {
   const [activeCategory, setActiveCategory] = useState('basic');
   const [logoPreview, setLogoPreview] = useState('');
   const fileInputRef = useRef(null);
+
+  const { toast } = useToast();
+  const { confirm, ConfirmDialog } = useConfirmDialog();
 
   const categories = [
     { id: 'basic', name: '基础设置', icon: 'ri-settings-line' },
@@ -93,38 +98,61 @@ export default function SystemSettingsPage() {
           setShowSuccess(false);
         }, 2000);
       } else {
-        alert('保存失败: ' + result.error);
+        toast({
+          title: "保存失败",
+          description: result.error,
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('保存配置失败:', error);
-      alert('保存失败');
+      toast({
+        title: "保存失败",
+        description: '保存失败',
+        variant: "destructive"
+      });
     } finally {
       setSaving(false);
     }
   };
 
   const handleResetSettings = async () => {
-    if (!confirm('确定要重置为默认设置吗？此操作不可撤销。')) {
-      return;
-    }
+    confirm({
+      title: '确认重置',
+      description: '确定要重置为默认设置吗？此操作不可撤销。',
+      variant: 'destructive',
+      onConfirm: async () => {
+        try {
+          const response = await fetch('/api/admin/settings', {
+            method: 'PUT'
+          });
 
-    try {
-      const response = await fetch('/api/admin/settings', {
-        method: 'PUT'
-      });
+          const result = await response.json();
 
-      const result = await response.json();
-      
-      if (result.success) {
-        await fetchConfigs();
-        alert('设置已重置为默认值');
-      } else {
-        alert('重置失败: ' + result.error);
+          if (result.success) {
+            await fetchConfigs();
+            toast({
+              title: "重置成功",
+              description: '设置已重置为默认值',
+              variant: "success"
+            });
+          } else {
+            toast({
+              title: "重置失败",
+              description: result.error,
+              variant: "destructive"
+            });
+          }
+        } catch (error) {
+          console.error('重置设置失败:', error);
+          toast({
+            title: "重置失败",
+            description: '重置失败',
+            variant: "destructive"
+          });
+        }
       }
-    } catch (error) {
-      console.error('重置设置失败:', error);
-      alert('重置失败');
-    }
+    });
   };
 
   const renderConfigInput = (config) => {
@@ -276,6 +304,7 @@ export default function SystemSettingsPage() {
             设置已保存！
           </div>
         )}
+        <ConfirmDialog />
       </div>
     </div>
     </AdminAuthGuard>

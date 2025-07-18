@@ -416,10 +416,17 @@ body {
   color: var(--warning);
 }
 
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
 .action-btn {
   padding: 0.375rem;
   border-radius: 0.375rem;
-  color: var(--text-secondary);
+  color: #666;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -427,11 +434,12 @@ body {
   transition: var(--transition);
   background-color: transparent;
   border: none;
+  font-size: 16px;
 }
 
 .action-btn:hover {
-  background-color: var(--background);
-  color: var(--primary);
+  background-color: #f5f5f5;
+  color: #1976d2;
 }
 
 /* 分页样式 */
@@ -781,5 +789,69 @@ input:-webkit-autofill:active {
 
   .filter-area {
     padding: 1rem;
+  }
+}
+
+/* 题目选项样式 */
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.option-label {
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.875rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.option-item .form-input {
+  flex: 1;
+  margin: 0;
+}
+
+/* 题目类型特殊样式 */
+.difficulty-stars {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #fbbf24;
+}
+
+.question-content {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 移动端选项样式优化 */
+@media (max-width: 640px) {
+  .option-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .option-label {
+    align-self: flex-start;
+  }
+
+  .question-content {
+    max-width: 200px;
   }
 }

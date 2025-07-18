@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import AdminAuthGuard from '../../../components/AdminAuthGuard';
 import AdminSidebar from '../../../components/AdminSidebar';
-import { adminApiRequest } from '../../../lib/auth/client';
 import '../../../styles/admin-index.css';
 
 export default function AdminIndexPage() {
@@ -15,7 +14,7 @@ export default function AdminIndexPage() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await adminApiRequest('/api/admin/dashboard');
+      const response = await fetch('/api/admin/dashboard');
       const result = await response.json();
 
       if (result.success) {

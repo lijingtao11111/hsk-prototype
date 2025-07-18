@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { adminLogout, getAdminUser } from '@/lib/auth/client';
 import { useEffect, useState } from 'react';
 import ClientOnly from './ClientOnly';
+import { useConfirmDialog } from './ui/confirm-dialog';
 
 interface AdminSidebarProps {
   currentPage: string;
@@ -9,6 +10,7 @@ interface AdminSidebarProps {
 
 function SidebarContent({ currentPage }: AdminSidebarProps) {
   const [user, setUser] = useState(null);
+  const { confirm, ConfirmDialog } = useConfirmDialog();
 
   useEffect(() => {
     setUser(getAdminUser());
@@ -16,9 +18,13 @@ function SidebarContent({ currentPage }: AdminSidebarProps) {
 
   const handleLogout = (e) => {
     e.preventDefault();
-    if (confirm('确定要退出登录吗？')) {
-      adminLogout();
-    }
+    confirm({
+      title: '确认退出',
+      description: '确定要退出登录吗？',
+      onConfirm: () => {
+        adminLogout();
+      }
+    });
   };
 
   const menuItems = [
@@ -54,12 +60,6 @@ function SidebarContent({ currentPage }: AdminSidebarProps) {
     {
       section: '系统设置',
       items: [
-        {
-          href: '/admin/system-settings',
-          icon: 'ri-settings-3-line',
-          label: '系统设置',
-          key: 'system-settings'
-        },
         {
           href: '#',
           icon: 'ri-logout-box-line',
@@ -119,6 +119,7 @@ function SidebarContent({ currentPage }: AdminSidebarProps) {
           </div>
         </div>
       </div>
+      <ConfirmDialog />
     </div>
   );
 }

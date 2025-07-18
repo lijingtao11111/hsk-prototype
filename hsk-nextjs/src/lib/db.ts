@@ -10,7 +10,7 @@ import {
 } from '../../generated/prisma'
 
 // 用户相关操作
-export const userService = {
+const userService = {
   // 获取所有用户
   async getAllUsers() {
     return await prisma.user.findMany({
@@ -221,7 +221,7 @@ export const settingService = {
 }
 
 // 学科相关操作
-export const subjectService = {
+const subjectService = {
   // 获取所有学科
   async getAllSubjects() {
     return await prisma.subject.findMany({
@@ -320,7 +320,7 @@ export const subjectService = {
 }
 
 // 题目相关操作
-export const questionService = {
+const questionService = {
   // 获取所有题目
   async getAllQuestions(filters?: {
     subjectId?: number
@@ -446,7 +446,7 @@ export const questionService = {
 }
 
 // 统计相关操作
-export const statsService = {
+const statsService = {
   // 获取系统概览统计
   async getSystemOverview() {
     const [
@@ -540,3 +540,5 @@ export const statsService = {
     }))
   }
 }
+
+export { userService, subjectService, questionService, statsService };
